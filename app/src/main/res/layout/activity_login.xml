@@ -9,7 +9,21 @@
     tools:context=".LoginActivity">
 
     <TextView
+        android:id="@+id/server_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/server" />
+
+    <EditText
+        android:id="@+id/server"
+        android:layout_below="@id/server_label"
+        android:inputType="text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:id="@+id/username_label"
+        android:layout_below="@id/server"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login" />
