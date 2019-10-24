@@ -1,10 +1,12 @@
-package org.tumasov.rmusicplayer;
+package org.tumasov.rmusicplayer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+
+import org.tumasov.rmusicplayer.R;
 
 public class SignUpActivity extends AppCompatActivity {
     private Button backButton;

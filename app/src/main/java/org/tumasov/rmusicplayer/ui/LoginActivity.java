@@ -1,9 +1,11 @@
-package org.tumasov.rmusicplayer;
+package org.tumasov.rmusicplayer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+
+import org.tumasov.rmusicplayer.R;
 
 public class LoginActivity extends AppCompatActivity {
     private Button signUpButton;
@@ -17,6 +19,6 @@ public class LoginActivity extends AppCompatActivity {
         signUpButton = findViewById(R.id.signUp_button);
         loginButton = findViewById(R.id.login_button);
         signUpButton.setOnClickListener((listener) -> startActivity(new Intent(this, SignUpActivity.class)));
-        loginButton.setOnClickListener((listener) -> startActivity(new Intent(this, MainActivity.class)));
+        loginButton.setOnClickListener((listener) -> startActivity(new Intent(this, ContentActivity.class)));
     }
 }
