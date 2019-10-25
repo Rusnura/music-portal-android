@@ -14,11 +14,11 @@ public class UserAPI {
 
     public void register(@NonNull String serverUrl, @NonNull String username, @NonNull String password,
                          @NonNull String name, @NonNull String lastname, @NonNull AsyncHttpExecutorListener listener) throws MalformedURLException {
-        URL url = new URL(serverUrl + "/api/register");
+        URL url = new URL(serverUrl + "api/register");
         String requestBody = MessageFormat.format("{username: {0}, password: {1}, name: {2}, lastname: {3}}",
                                 username, password, name, lastname);
         HttpRequest request = new HttpRequest.HttpBuilder(url, "POST")
-                .doInput(true)
+                .doOutput(true)
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .body(requestBody)
                 .build();
@@ -27,11 +27,11 @@ public class UserAPI {
 
     public void login(@NonNull String serverUrl, @NonNull String username, @NonNull String password,
                       @NonNull AsyncHttpExecutorListener listener) throws MalformedURLException {
-        URL url = new URL(serverUrl + "/api/authenticate");
+        URL url = new URL(serverUrl + "api/authenticate");
 
         String requestBody = "{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}";
         HttpRequest request = new HttpRequest.HttpBuilder(url, "POST")
-                .doInput(true)
+                .doOutput(true)
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .body(requestBody)
                 .build();

@@ -3,6 +3,7 @@ package org.tumasov.rmusicplayer.helpers.http;
 import android.os.AsyncTask;
 import android.util.Log;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpRequest;
+import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
 import org.tumasov.rmusicplayer.helpers.http.interfaces.AsyncHttpExecutorListener;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class AsyncHttpExecutor extends AsyncTask<Void, Object, Void> {
     @SuppressWarnings("unchecked")
     @Override
     protected Void doInBackground(Void... voids) {
-        String response = null;
+        HttpResponse response = null;
         try {
             response = HttpExecutor.execute(httpRequest);
         } catch (IOException e) {

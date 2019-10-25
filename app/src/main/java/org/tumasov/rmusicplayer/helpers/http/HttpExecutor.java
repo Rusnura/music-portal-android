@@ -2,9 +2,12 @@ package org.tumasov.rmusicplayer.helpers.http;
 
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpParameter;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpRequest;
+import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -12,7 +15,7 @@ import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 
 public class HttpExecutor {
-    public static String execute(HttpRequest request) throws IOException {
+    public static HttpResponse execute(HttpRequest request) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) request.getURL().openConnection();
         try {
             connection.setRequestMethod(request.getMethod());
@@ -33,14 +36,17 @@ public class HttpExecutor {
                 outputStream.close();
             }
 
-            BufferedReader bf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder response = new StringBuilder();
+            if (request.isDoInput()) {
+                InputStream is = (connection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) ? connection.getInputStream() : connection.getErrorStream();
+                BufferedReader bf = new BufferedReader(new InputStreamReader(is));
 
-            String inputLine;
-            while ((inputLine = bf.readLine()) != null) {
-                response.append(inputLine);
+                String inputLine;
+                while ((inputLine = bf.readLine()) != null) {
+                    response.append(inputLine);
+                }
             }
-            return response.toString();
+            return new HttpResponse(connection.getResponseCode(), response.toString());
         } finally {
             connection.disconnect();
         }
