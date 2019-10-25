@@ -1,10 +1,10 @@
 package org.tumasov.rmusicplayer.helpers.entities;
 
-public class HttpHeader {
+public class HttpParameter {
     private String name;
-    private String value;
+    private Object value;
 
-    public HttpHeader(String name, String value) {
+    public HttpParameter(String name, Object value) {
         this.name = name;
         this.value = value;
     }
@@ -17,11 +17,11 @@ public class HttpHeader {
         this.name = name;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 }
