@@ -1,4 +1,4 @@
-package org.tumasov.rmusicplayer.helpers.entities;
+package org.tumasov.rmusicplayer.helpers.http.entities;
 
 public class HttpParameter {
     private String name;

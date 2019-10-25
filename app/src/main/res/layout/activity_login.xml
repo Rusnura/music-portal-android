@@ -9,48 +9,48 @@
     tools:context=".ui.LoginActivity">
 
     <TextView
-        android:id="@+id/server_label"
+        android:id="@+id/login_server_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/server" />
 
     <EditText
-        android:id="@+id/server"
-        android:layout_below="@id/server_label"
+        android:id="@+id/login_server"
+        android:layout_below="@id/login_server_label"
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/username_label"
-        android:layout_below="@id/server"
+        android:id="@+id/login_username_label"
+        android:layout_below="@id/login_server"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login" />
 
     <EditText
-        android:id="@+id/username"
-        android:layout_below="@id/username_label"
+        android:id="@+id/login_username"
+        android:layout_below="@id/login_username_label"
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/password_label"
-        android:layout_below="@id/username"
+        android:id="@+id/login_password_label"
+        android:layout_below="@id/login_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/password" />
 
     <EditText
-        android:id="@+id/password"
-        android:layout_below="@id/password_label"
+        android:id="@+id/login_password"
+        android:layout_below="@id/login_password_label"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/signUp_button"
+        android:id="@+id/login_signUp_button"
         android:layout_toStartOf="@id/login_button"
         android:layout_alignTop="@id/login_button"
         android:layout_marginEnd="5dp"
@@ -62,7 +62,7 @@
         android:id="@+id/login_button"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="5dp"
-        android:layout_below="@id/password"
+        android:layout_below="@id/login_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/enter" />
