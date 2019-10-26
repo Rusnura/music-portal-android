@@ -1,5 +1,7 @@
 package org.tumasov.rmusicplayer.helpers.http.entities;
 
+import java.net.HttpURLConnection;
+
 public class HttpResponse {
     private int code;
     private String body;
@@ -15,6 +17,10 @@ public class HttpResponse {
 
     public String getBody() {
         return body;
+    }
+
+    public boolean isSuccessful() {
+        return code < HttpURLConnection.HTTP_BAD_REQUEST;
     }
 
     @Override

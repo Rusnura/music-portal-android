@@ -1,5 +1,7 @@
 package org.tumasov.rmusicplayer.helpers.http.interfaces;
 
-public interface AsyncHttpExecutorListener<T> {
-    void onComplete(T params);
+import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
+
+public interface AsyncHttpExecutorListener {
+    void onComplete(HttpResponse response);
 }

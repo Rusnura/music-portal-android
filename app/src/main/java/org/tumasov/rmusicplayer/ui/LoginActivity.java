@@ -11,16 +11,12 @@ import android.widget.TextView;
 
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.helpers.UrlUtils;
-import org.tumasov.rmusicplayer.helpers.api.UserAPI;
-import org.tumasov.rmusicplayer.helpers.http.AsyncHttpExecutor;
-import org.tumasov.rmusicplayer.helpers.http.entities.HttpRequest;
-import org.tumasov.rmusicplayer.helpers.http.interfaces.AsyncHttpExecutorListener;
+import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
-    private UserAPI userAPI = new UserAPI();
+    private ServerAPI serverAPI = new ServerAPI();
     private Button signUpButton, loginButton;
     private TextView addressTextView, loginTextView, passwordTextView;
     private ProgressBar loadingBar;
@@ -47,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             if (addressTextView.getText().length() > 0 && loginTextView.getText().length() > 0 && passwordTextView.getText().length() > 0) {
                 setLoadingState(true);
                 try {
-                    userAPI.login(UrlUtils.normalize(addressTextView.getText().toString()),
+                    serverAPI.login(UrlUtils.normalize(addressTextView.getText().toString()),
                             loginTextView.getText().toString(), passwordTextView.getText().toString(),
                             (r) -> {
                                 setLoadingState(false);

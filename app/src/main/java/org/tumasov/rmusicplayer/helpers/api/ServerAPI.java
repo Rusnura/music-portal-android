@@ -1,6 +1,12 @@
 package org.tumasov.rmusicplayer.helpers.api;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.tumasov.rmusicplayer.helpers.JSONUtils;
 import org.tumasov.rmusicplayer.helpers.http.AsyncHttpExecutor;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpParameter;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpRequest;
@@ -9,7 +15,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 
-public class UserAPI {
+public class ServerAPI {
+    private static String JWT_TOKEN = null;
     private static final String CONTENT_TYPE = "application/json";
 
     public void register(@NonNull String serverUrl, @NonNull String username, @NonNull String password,
@@ -35,6 +42,22 @@ public class UserAPI {
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .body(requestBody)
                 .build();
-        new AsyncHttpExecutor(request, listener).execute();
+        AsyncHttpExecutorListener authListener = (r) -> {
+            if (r.isSuccessful()) {
+                try {
+                    JSONObject jToken = JSONUtils.parseJSON(r.getBody());
+                    JWT_TOKEN = jToken.getString("token");
+                    Log.d("SERVER_API", "login(): JSON Token received: " + JWT_TOKEN);
+                } catch (JSONException e) {
+                    Log.e("SERVER_API", "login(): Request is successful, but cannot parse token! Error: " + e.getMessage(), e);
+                }
+            }
+            listener.onComplete(r);
+        };
+        new AsyncHttpExecutor(request, authListener).execute();
+    }
+
+    public void getMySongs() {
+        // TODO: Releae
     }
 }
