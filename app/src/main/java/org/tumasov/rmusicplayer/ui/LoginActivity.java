@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             if (addressTextView.getText().length() > 0 && loginTextView.getText().length() > 0 && passwordTextView.getText().length() > 0) {
                 setLoadingState(true);
                 try {
-                    userAPI.login(UrlUtils.normilize(addressTextView.getText().toString()),
+                    userAPI.login(UrlUtils.normalize(addressTextView.getText().toString()),
                             loginTextView.getText().toString(), passwordTextView.getText().toString(),
                             (r) -> {
                                 setLoadingState(false);
