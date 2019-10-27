@@ -20,11 +20,12 @@ public class AsyncHttpExecutor extends AsyncTask<Void, Object, Void> {
     @SuppressWarnings("unchecked")
     @Override
     protected Void doInBackground(Void... voids) {
-        HttpResponse response = null;
+        HttpResponse response;
         try {
             response = HttpExecutor.execute(httpRequest);
         } catch (IOException e) {
             Log.e("ASYNC_HTTP_EXECUTOR","Cannot execute request!", e);
+            response = new HttpResponse(424, null);
         }
         listener.onComplete(response);
         return null;

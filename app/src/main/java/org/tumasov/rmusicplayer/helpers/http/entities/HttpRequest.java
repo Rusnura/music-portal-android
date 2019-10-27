@@ -1,11 +1,10 @@
 package org.tumasov.rmusicplayer.helpers.http.entities;
 
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 public class HttpRequest {
-    private final java.net.URL URL;
+    private final String URL;
     private final String method;
     private final List<HttpParameter> headers;
     private final String body;
@@ -14,7 +13,7 @@ public class HttpRequest {
     private boolean doInput;
     private boolean doOutput;
 
-    public HttpRequest(HttpBuilder httpBuilder) {
+    private HttpRequest(HttpBuilder httpBuilder) {
         this.URL = httpBuilder.URL;
         this.method = httpBuilder.method;
         this.headers = httpBuilder.headers;
@@ -26,7 +25,7 @@ public class HttpRequest {
     }
 
     public static class HttpBuilder {
-        private final URL URL;
+        private final String URL;
         private final String method;
         private final List<HttpParameter> headers = new LinkedList<>();
         private int readTimeout = 0;
@@ -35,7 +34,7 @@ public class HttpRequest {
         private boolean doOutput = false;
         private String body;
 
-        public HttpBuilder(URL URL, String method) {
+        public HttpBuilder(String URL, String method) {
             this.URL = URL;
             this.method = method;
         }
@@ -75,7 +74,7 @@ public class HttpRequest {
         }
     }
 
-    public java.net.URL getURL() {
+    public String getURL() {
         return URL;
     }
 

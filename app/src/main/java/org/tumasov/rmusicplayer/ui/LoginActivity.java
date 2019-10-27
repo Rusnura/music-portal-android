@@ -16,7 +16,7 @@ import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import java.net.MalformedURLException;
 
 public class LoginActivity extends AppCompatActivity {
-    private ServerAPI serverAPI = new ServerAPI();
+    private ServerAPI serverAPI = ServerAPI.getInstance();
     private Button signUpButton, loginButton;
     private TextView addressTextView, loginTextView, passwordTextView;
     private ProgressBar loadingBar;
@@ -42,17 +42,15 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener((listener) -> {
             if (addressTextView.getText().length() > 0 && loginTextView.getText().length() > 0 && passwordTextView.getText().length() > 0) {
                 setLoadingState(true);
-                try {
-                    serverAPI.login(UrlUtils.normalize(addressTextView.getText().toString()),
-                            loginTextView.getText().toString(), passwordTextView.getText().toString(),
-                            (r) -> {
-                                setLoadingState(false);
-                                Log.i("LOGIN_ACTIVITY", "Result: " + r);
-                            });
-                } catch (MalformedURLException e) {
-                    Log.w("LOGIN_ACTIVITY", "Can't parse URL!");
-                    setLoadingState(false);
-                }
+                serverAPI.login(UrlUtils.normalize(addressTextView.getText().toString()),
+                        loginTextView.getText().toString(), passwordTextView.getText().toString(),
+                        (r) -> {
+                            setLoadingState(false);
+                            Log.i("LOGIN_ACTIVITY", "Result: " + r);
+                            if (r.isSuccessful()) {
+                                startActivity(new Intent(this, ContentActivity.class));
+                            }
+                        });
             }
         });
     }

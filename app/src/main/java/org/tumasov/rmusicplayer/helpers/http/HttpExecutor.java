@@ -12,11 +12,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.Charset;
 
 public class HttpExecutor {
     public static HttpResponse execute(HttpRequest request) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) request.getURL().openConnection();
+        URL url = new URL(request.getURL());
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         try {
             connection.setRequestMethod(request.getMethod());
             connection.setUseCaches(request.isUseCache());
