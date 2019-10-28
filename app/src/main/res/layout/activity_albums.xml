@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <Button
-            android:id="@+id/getMySongs_btn"
+            android:id="@+id/allSongs_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Get my songs" />
+            android:text="Get all songs" />
     </LinearLayout>
 </ScrollView>

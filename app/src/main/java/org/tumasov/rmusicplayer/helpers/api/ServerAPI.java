@@ -66,6 +66,22 @@ public class ServerAPI {
         new AsyncHttpExecutor(request, authListener).execute();
     }
 
+    public void getMyAlbums(@NonNull AsyncHttpExecutorListener listener) {
+        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/albums", "GET")
+                .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
+                .addHeader(new HttpParameter("Authorization", "Bearer " + JWT_TOKEN))
+                .build();
+        new AsyncHttpExecutor(request, listener).execute();
+    }
+
+    public void getAlbums(@NonNull String username, @NonNull AsyncHttpExecutorListener listener) {
+        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/user/"+username+"/albums", "GET")
+                .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
+                .addHeader(new HttpParameter("Authorization", "Bearer " + JWT_TOKEN))
+                .build();
+        new AsyncHttpExecutor(request, listener).execute();
+    }
+
     public void getMySongs(@NonNull AsyncHttpExecutorListener listener) {
         HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/songs", "GET")
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))

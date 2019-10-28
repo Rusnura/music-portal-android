@@ -2,6 +2,7 @@ package org.tumasov.rmusicplayer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,12 +21,15 @@ public class LoginActivity extends AppCompatActivity {
     private Button signUpButton, loginButton;
     private TextView addressTextView, loginTextView, passwordTextView;
     private ProgressBar loadingBar;
+    private SharedPreferences applicationSettings;
+    private static final String settingsName = "R_MUSIC_SETTINGS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        applicationSettings = getSharedPreferences(settingsName, MODE_PRIVATE);
         loadingBar = findViewById(R.id.login_progress);
         addressTextView = findViewById(R.id.login_server);
         signUpButton = findViewById(R.id.login_signUp_button);
@@ -34,9 +38,6 @@ public class LoginActivity extends AppCompatActivity {
         passwordTextView = findViewById(R.id.login_password);
 
         loadingBar.setVisibility(View.INVISIBLE);
-
-        // TODO: Remove it later
-        addressTextView.setText("192.168.0.105:8080");
 
         signUpButton.setOnClickListener((listener) -> startActivity(new Intent(this, SignUpActivity.class)));
         loginButton.setOnClickListener((listener) -> {
@@ -48,11 +49,24 @@ public class LoginActivity extends AppCompatActivity {
                             setLoadingState(false);
                             Log.i("LOGIN_ACTIVITY", "Result: " + r);
                             if (r.isSuccessful()) {
+                                SharedPreferences.Editor settingsEditor = applicationSettings.edit();
+                                settingsEditor.putString("apiServer", addressTextView.getText().toString());
+                                settingsEditor.putString("username", loginTextView.getText().toString());
+                                settingsEditor.putString("password", passwordTextView.getText().toString());
+                                settingsEditor.apply();
                                 startActivity(new Intent(this, ContentActivity.class));
                             }
                         });
             }
         });
+
+        if (applicationSettings.contains("apiServer")
+                && applicationSettings.contains("username") && applicationSettings.contains("password")) {
+            addressTextView.setText(applicationSettings.getString("apiServer", ""));
+            loginTextView.setText(applicationSettings.getString("username", ""));
+            passwordTextView.setText(applicationSettings.getString("password", ""));
+            loginButton.callOnClick();
+        }
     }
 
     private void setLoadingState(boolean isLoading) {
