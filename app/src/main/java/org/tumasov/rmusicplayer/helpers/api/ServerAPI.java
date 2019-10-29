@@ -1,9 +1,7 @@
 package org.tumasov.rmusicplayer.helpers.api;
 
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
@@ -11,8 +9,6 @@ import org.tumasov.rmusicplayer.helpers.http.AsyncHttpExecutor;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpParameter;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpRequest;
 import org.tumasov.rmusicplayer.helpers.http.interfaces.AsyncHttpExecutorListener;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.MessageFormat;
 
 public class ServerAPI {
@@ -84,6 +80,14 @@ public class ServerAPI {
 
     public void getMySongs(@NonNull AsyncHttpExecutorListener listener) {
         HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/songs", "GET")
+                .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
+                .addHeader(new HttpParameter("Authorization", "Bearer " + JWT_TOKEN))
+                .build();
+        new AsyncHttpExecutor(request, listener).execute();
+    }
+
+    public void getSongsFromAlbum(@NonNull String albumId, @NonNull AsyncHttpExecutorListener listener) {
+        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/album/"+albumId+"/songs", "GET")
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + JWT_TOKEN))
                 .build();

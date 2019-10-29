@@ -14,14 +14,14 @@ import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.helpers.UrlUtils;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 
-import java.net.MalformedURLException;
-
 public class LoginActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
     private Button signUpButton, loginButton;
     private TextView addressTextView, loginTextView, passwordTextView;
     private ProgressBar loadingBar;
     private SharedPreferences applicationSettings;
+    private static Intent openSignUpActivity;
+    private static Intent openAlbumsActivity;
     private static final String settingsName = "R_MUSIC_SETTINGS";
 
     @Override
@@ -36,10 +36,12 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         loginTextView = findViewById(R.id.login_username);
         passwordTextView = findViewById(R.id.login_password);
+        openSignUpActivity = new Intent(this, SignUpActivity.class);
+        openAlbumsActivity = new Intent(this, AlbumsActivity.class);
 
         loadingBar.setVisibility(View.INVISIBLE);
 
-        signUpButton.setOnClickListener((listener) -> startActivity(new Intent(this, SignUpActivity.class)));
+        signUpButton.setOnClickListener((listener) -> startActivity(openSignUpActivity));
         loginButton.setOnClickListener((listener) -> {
             if (addressTextView.getText().length() > 0 && loginTextView.getText().length() > 0 && passwordTextView.getText().length() > 0) {
                 setLoadingState(true);
@@ -54,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                                 settingsEditor.putString("username", loginTextView.getText().toString());
                                 settingsEditor.putString("password", passwordTextView.getText().toString());
                                 settingsEditor.apply();
-                                startActivity(new Intent(this, ContentActivity.class));
+                                startActivity(openAlbumsActivity);
                             }
                         });
             }
