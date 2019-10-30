@@ -1,6 +1,8 @@
 package org.tumasov.rmusicplayer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,10 +20,13 @@ import org.json.JSONObject;
 import org.tumasov.rmusicplayer.AudioListActivity;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
+import org.tumasov.rmusicplayer.helpers.adapters.AlbumAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 
 public class AlbumsActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
+    private RecyclerView albumsRecyclerView;
+    private AlbumAdapter albumAdapter;
     private LinearLayout rootLinearLayout;
     private Button getAllSongsButton;
     private SharedPreferences applicationSettings;
@@ -32,10 +37,18 @@ public class AlbumsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_albums);
+
         applicationSettings = getSharedPreferences(settingsName, MODE_PRIVATE);
-        rootLinearLayout = findViewById(R.id.albumsRootLinearLayout);
-        getAllSongsButton = findViewById(R.id.allSongs_btn);
-        getAllSongsButton.setOnClickListener(l -> onClickToAlbumButton("all"));
+        albumsRecyclerView = findViewById(R.id.albums_list);
+
+        albumAdapter = new AlbumAdapter();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        albumsRecyclerView.setLayoutManager(linearLayoutManager);
+        albumsRecyclerView.setAdapter(albumAdapter);
+
+//        rootLinearLayout = findViewById(R.id.albumsRootLinearLayout);
+//        getAllSongsButton = findViewById(R.id.allSongs_btn);
+//        getAllSongsButton.setOnClickListener(l -> onClickToAlbumButton("all"));
         openAlbumContentsIntent = new Intent(this, AudioListActivity.class);
         serverAPI.getMyAlbums(r -> {
             if (r.isSuccessful()) {
@@ -44,11 +57,11 @@ public class AlbumsActivity extends AppCompatActivity {
                     JSONArray jAlbums = jAlbumsPageable.getJSONArray("content");
                     for (int i = 0; i < jAlbums.length(); i++) {
                         JSONObject album = jAlbums.getJSONObject(i);
-                        Button openAlbum = new Button(this);
-                        openAlbum.setText(album.getString("name"));
-                        String albumId = album.getString("id");
-                        openAlbum.setOnClickListener((l) -> onClickToAlbumButton(albumId));
-                        putElementToRootLayout(openAlbum, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                        Button openAlbum = new Button(this);
+//                        openAlbum.setText(album.getString("name"));
+//                        String albumId = album.getString("id");
+//                        openAlbum.setOnClickListener((l) -> onClickToAlbumButton(albumId));
+                        putElementToRootLayout(album);
                     }
                 } catch (JSONException e) {
                     Log.e("CONTENT-ACTIVITY", "Cannot parse JSON!", e);
@@ -57,8 +70,8 @@ public class AlbumsActivity extends AppCompatActivity {
         });
     }
 
-    private void putElementToRootLayout(View view, LinearLayout.LayoutParams layoutParams) {
-        runOnUiThread(() -> rootLinearLayout.addView(view, layoutParams));
+    private void putElementToRootLayout(JSONObject album) {
+        runOnUiThread(() -> albumAdapter.getjAlbums().add(album));
     }
 
     private void onClickToAlbumButton(String albumId) {
