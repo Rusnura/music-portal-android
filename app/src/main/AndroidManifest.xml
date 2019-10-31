@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AudioListActivity"></activity>
+        <activity android:name=".ui.AudioListActivity"></activity>
         <activity android:name=".ui.AlbumsActivity" />
         <activity android:name=".ui.SignUpActivity" />
         <activity android:name=".ui.LoginActivity">

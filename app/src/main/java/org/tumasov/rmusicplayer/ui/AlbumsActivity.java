@@ -8,16 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.tumasov.rmusicplayer.AudioListActivity;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
 import org.tumasov.rmusicplayer.helpers.adapters.AlbumAdapter;
@@ -31,7 +27,6 @@ public class AlbumsActivity extends AppCompatActivity {
     private Button getAllSongsButton;
     private SharedPreferences applicationSettings;
     private static final String settingsName = "R_MUSIC_SETTINGS";
-    private static Intent openAlbumContentsIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +44,7 @@ public class AlbumsActivity extends AppCompatActivity {
 //        rootLinearLayout = findViewById(R.id.albumsRootLinearLayout);
 //        getAllSongsButton = findViewById(R.id.allSongs_btn);
 //        getAllSongsButton.setOnClickListener(l -> onClickToAlbumButton("all"));
-        openAlbumContentsIntent = new Intent(this, AudioListActivity.class);
+
         serverAPI.getMyAlbums(r -> {
             if (r.isSuccessful()) {
                 try {
@@ -72,10 +67,5 @@ public class AlbumsActivity extends AppCompatActivity {
 
     private void putElementToRootLayout(JSONObject album) {
         runOnUiThread(() -> albumAdapter.getjAlbums().add(album));
-    }
-
-    private void onClickToAlbumButton(String albumId) {
-        openAlbumContentsIntent.putExtra("albumId", albumId);
-        startActivity(openAlbumContentsIntent);
     }
 }

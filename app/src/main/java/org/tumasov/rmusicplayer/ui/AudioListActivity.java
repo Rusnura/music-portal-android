@@ -1,6 +1,8 @@
-package org.tumasov.rmusicplayer;
+package org.tumasov.rmusicplayer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,15 +15,20 @@ import android.widget.LinearLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
+import org.tumasov.rmusicplayer.helpers.adapters.SongAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
 
 public class AudioListActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
-    private LinearLayout rootLinearLayout;
+    private RecyclerView songsRecyclerView;
     private SharedPreferences applicationSettings;
     private static final String settingsName = "R_MUSIC_SETTINGS";
+
+    private SongAdapter songAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +37,11 @@ public class AudioListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_audio_list);
         applicationSettings = getSharedPreferences(settingsName, MODE_PRIVATE);
         String albumId = getIntent().getStringExtra("albumId");
-        rootLinearLayout = findViewById(R.id.audiosRootLinearLayout);
+        songsRecyclerView = findViewById(R.id.songs_list);
+        songAdapter = new SongAdapter();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        songsRecyclerView.setLayoutManager(linearLayoutManager);
+        songsRecyclerView.setAdapter(songAdapter);
 
         if (albumId != null) {
             if (albumId.equals("all")) {
@@ -48,9 +59,9 @@ public class AudioListActivity extends AppCompatActivity {
                 JSONArray jSongs = jSongsPageable.getJSONArray("content");
                 for (int i = 0; i < jSongs.length(); i++) {
                     JSONObject song = jSongs.getJSONObject(i);
-                    Button playMP3 = new Button(this);
-                    playMP3.setText(song.getString("artist") + " - " + song.getString("title"));
-                    putElementToRootLayout(playMP3, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                    Button playMP3 = new Button(this);
+//                    playMP3.setText(song.getString("artist") + " - " + song.getString("title"));
+                    putElementToRootLayout(song);
                 }
             } catch (JSONException e) {
                 Log.e("CONTENT-ACTIVITY", "Cannot parse JSON!", e);
@@ -58,7 +69,7 @@ public class AudioListActivity extends AppCompatActivity {
         }
     }
 
-    private void putElementToRootLayout(View view, LinearLayout.LayoutParams layoutParams) {
-        runOnUiThread(() -> rootLinearLayout.addView(view, layoutParams));
+    private void putElementToRootLayout(JSONObject jMP3Object) {
+        runOnUiThread(() -> this.songAdapter.getjSongs().add(jMP3Object));
     }
 }
