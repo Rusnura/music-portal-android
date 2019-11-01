@@ -7,12 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import org.json.JSONObject;
 import org.tumasov.rmusicplayer.R;
-import java.util.LinkedList;
+import org.tumasov.rmusicplayer.entities.Song;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
-    private final LinkedList<JSONObject> jSongs = new LinkedList<>();
+    private final List<Song> songs = new ArrayList<>();
 
     @NonNull
     @Override
@@ -33,11 +34,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     @Override
     public int getItemCount() {
-        return jSongs.size();
+        return songs.size();
     }
 
-    public LinkedList<JSONObject> getjSongs() {
-        return jSongs;
+    public List<Song> getSongs() {
+        return songs;
     }
 
     class SongViewHolder extends RecyclerView.ViewHolder {
@@ -50,12 +51,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         }
 
         void bind(int lastIndex) {
-            try {
-                songTitle.setText(jSongs.get(lastIndex).getString("title"));
-                //songTitle.setOnClickListener();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            songTitle.setText(songs.get(lastIndex).getTitle());
+            //songTitle.setOnClickListener();
         }
     }
 }

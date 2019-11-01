@@ -4,12 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,12 +16,12 @@ import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
 import org.tumasov.rmusicplayer.helpers.adapters.AlbumAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
+import org.tumasov.rmusicplayer.entities.Album;
 
 public class AlbumsActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
     private RecyclerView albumsRecyclerView;
     private AlbumAdapter albumAdapter;
-    private LinearLayout rootLinearLayout;
     private Button getAllSongsButton;
     private SharedPreferences applicationSettings;
     private static final String settingsName = "R_MUSIC_SETTINGS";
@@ -51,12 +49,10 @@ public class AlbumsActivity extends AppCompatActivity {
                     JSONObject jAlbumsPageable = JSONUtils.parseJSON(r.getBody());
                     JSONArray jAlbums = jAlbumsPageable.getJSONArray("content");
                     for (int i = 0; i < jAlbums.length(); i++) {
-                        JSONObject album = jAlbums.getJSONObject(i);
-//                        Button openAlbum = new Button(this);
-//                        openAlbum.setText(album.getString("name"));
-//                        String albumId = album.getString("id");
-//                        openAlbum.setOnClickListener((l) -> onClickToAlbumButton(albumId));
-                        putElementToRootLayout(album);
+                        Album album = JSONUtils.getObjectFromJSON(jAlbums.getJSONObject(i), Album.class);
+                        if (album != null) {
+                            putElementToRootLayout(album);
+                        }
                     }
                 } catch (JSONException e) {
                     Log.e("CONTENT-ACTIVITY", "Cannot parse JSON!", e);
@@ -65,7 +61,7 @@ public class AlbumsActivity extends AppCompatActivity {
         });
     }
 
-    private void putElementToRootLayout(JSONObject album) {
-        runOnUiThread(() -> albumAdapter.getjAlbums().add(album));
+    private void putElementToRootLayout(Album album) {
+        runOnUiThread(() -> albumAdapter.getAlbums().add(album));
     }
 }

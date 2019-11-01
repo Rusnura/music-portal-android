@@ -8,20 +8,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.tumasov.rmusicplayer.R;
+import org.tumasov.rmusicplayer.entities.Album;
 import org.tumasov.rmusicplayer.ui.AudioListActivity;
-
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-
 import static androidx.core.content.ContextCompat.startActivity;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> {
     private Context context;
-    private final List<JSONObject> jAlbums = new LinkedList<>();
+    private final List<Album> albums = new ArrayList<>();
     private static Intent openAlbumContentsIntent;
 
     @NonNull
@@ -44,11 +40,11 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
 
     @Override
     public int getItemCount() {
-        return jAlbums.size();
+        return albums.size();
     }
 
-    public List<JSONObject> getjAlbums() {
-        return jAlbums;
+    public List<Album> getAlbums() {
+        return albums;
     }
 
     class AlbumViewHolder extends RecyclerView.ViewHolder {
@@ -61,17 +57,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         }
 
         void bind(int listIndex) {
-            try {
-                String albumId = jAlbums.get(listIndex).getString("id");
-                albumTitle.setText(jAlbums.get(listIndex).getString("name"));
-                albumTitle.setOnClickListener(e -> onClick(albumId));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            albumTitle.setText(albums.get(listIndex).getName());
+            albumTitle.setOnClickListener(e -> onClick(albums.get(listIndex)));
         }
 
-        void onClick(String albumId) {
-            openAlbumContentsIntent.putExtra("albumId", albumId);
+        void onClick(Album album) {
+            openAlbumContentsIntent.putExtra("albumId", album.getId());
             startActivity(context, openAlbumContentsIntent, null);
         }
     }

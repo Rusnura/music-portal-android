@@ -3,19 +3,14 @@ package org.tumasov.rmusicplayer.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.tumasov.rmusicplayer.R;
+import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
 import org.tumasov.rmusicplayer.helpers.adapters.SongAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
@@ -58,9 +53,7 @@ public class AudioListActivity extends AppCompatActivity {
                 JSONObject jSongsPageable = JSONUtils.parseJSON(response.getBody());
                 JSONArray jSongs = jSongsPageable.getJSONArray("content");
                 for (int i = 0; i < jSongs.length(); i++) {
-                    JSONObject song = jSongs.getJSONObject(i);
-//                    Button playMP3 = new Button(this);
-//                    playMP3.setText(song.getString("artist") + " - " + song.getString("title"));
+                    Song song = JSONUtils.getObjectFromJSON(jSongs.getJSONObject(i), Song.class);
                     putElementToRootLayout(song);
                 }
             } catch (JSONException e) {
@@ -69,7 +62,7 @@ public class AudioListActivity extends AppCompatActivity {
         }
     }
 
-    private void putElementToRootLayout(JSONObject jMP3Object) {
-        runOnUiThread(() -> this.songAdapter.getjSongs().add(jMP3Object));
+    private void putElementToRootLayout(Song song) {
+        runOnUiThread(() -> this.songAdapter.getSongs().add(song));
     }
 }
