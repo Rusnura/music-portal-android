@@ -8,6 +8,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class JSONUtils {
+    public static String getJSONStringFromObject(Object o) {
+        throw new RuntimeException("Method isn't released!");
+    }
+
     public static JSONObject parseJSON(String raw) throws JSONException {
         return new JSONObject(raw);
     }

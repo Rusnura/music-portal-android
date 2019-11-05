@@ -3,6 +3,7 @@ package org.tumasov.rmusicplayer.helpers.api;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import org.json.JSONException;
+import org.tumasov.rmusicplayer.entities.User;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
 import org.tumasov.rmusicplayer.entities.Token;
 import org.tumasov.rmusicplayer.helpers.http.AsyncHttpExecutor;
@@ -26,10 +27,9 @@ public class ServerAPI {
         return instance;
     }
 
-    public void register(@NonNull String serverUrl, @NonNull String username, @NonNull String password,
-                         @NonNull String name, @NonNull String lastname, @NonNull AsyncHttpExecutorListener listener) {
-        String requestBody = MessageFormat.format("{username: {0}, password: {1}, name: {2}, lastname: {3}}",
-                                username, password, name, lastname);
+    public void register(@NonNull String serverUrl, @NonNull User user, @NonNull AsyncHttpExecutorListener listener) {
+        String requestBody = "{username: " + user.getUsername() + ", password: " + user.getPassword()  + ", " +
+                "name: " + user.getName() + ", lastname: " + user.getLastname() + "}";
         HttpRequest request = new HttpRequest.HttpBuilder(serverUrl + "api/register", "POST")
                 .doOutput(true)
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
