@@ -16,7 +16,7 @@
         android:text="@string/server" />
 
     <EditText
-        android:id="@+id/server"
+        android:id="@+id/server_signUp"
         android:layout_below="@id/server_label"
         android:inputType="text"
         android:layout_width="match_parent"
@@ -24,13 +24,13 @@
 
     <TextView
         android:id="@+id/username_label"
-        android:layout_below="@id/server"
+        android:layout_below="@id/server_signUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/username_signUp"
         android:layout_below="@id/username_label"
         android:inputType="text"
         android:layout_width="match_parent"
@@ -38,13 +38,13 @@
 
     <TextView
         android:id="@+id/password_label"
-        android:layout_below="@id/username"
+        android:layout_below="@id/username_signUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/password" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/password_signUp"
         android:layout_below="@id/password_label"
         android:inputType="textPassword"
         android:layout_width="match_parent"
@@ -52,13 +52,13 @@
 
     <TextView
         android:id="@+id/password_repeat_label"
-        android:layout_below="@id/password"
+        android:layout_below="@id/password_signUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/repeat_password" />
 
     <EditText
-        android:id="@+id/repeatPassword"
+        android:id="@+id/repeatPassword_signUp"
         android:layout_below="@id/password_repeat_label"
         android:inputType="textPassword"
         android:layout_width="match_parent"
@@ -68,13 +68,13 @@
 
     <TextView
         android:id="@+id/name_label"
-        android:layout_below="@id/repeatPassword"
+        android:layout_below="@id/repeatPassword_signUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/your_name" />
 
     <EditText
-        android:id="@+id/name"
+        android:id="@+id/name_signUp"
         android:layout_below="@id/name_label"
         android:inputType="text"
         android:layout_width="match_parent"
@@ -82,13 +82,13 @@
 
     <TextView
         android:id="@+id/lastname_label"
-        android:layout_below="@id/name"
+        android:layout_below="@id/name_signUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/your_lastname" />
 
     <EditText
-        android:id="@+id/lastname"
+        android:id="@+id/lastname_signUp"
         android:layout_below="@id/lastname_label"
         android:inputType="text"
         android:layout_width="match_parent"
@@ -104,7 +104,7 @@
 
     <Button
         android:id="@+id/doSignUp_button"
-        android:layout_below="@+id/lastname"
+        android:layout_below="@+id/lastname_signUp"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="5dp"
         android:layout_width="wrap_content"
