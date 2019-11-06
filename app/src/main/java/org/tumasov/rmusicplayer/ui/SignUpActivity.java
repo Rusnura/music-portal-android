@@ -49,15 +49,19 @@ public class SignUpActivity extends AppCompatActivity {
                         if (r.isSuccessful()) {
                             startActivity(new Intent(this, LoginActivity.class));
                         } else {
-                            Toast.makeText(this, "Request error: " + r.getBody(), Toast.LENGTH_LONG).show();
+                            showMessage("Request error: " + r.getBody(), true);
                         }
                     });
                 } else {
-                    Toast.makeText(this, "Password isn't equal!", Toast.LENGTH_LONG).show();
+                    showMessage("Password isn't equal!", true);
                 }
             } else {
-                Toast.makeText(this, "Required field must be entered!", Toast.LENGTH_LONG).show();
+                showMessage("Required field must be entered!", true);
             }
         });
+    }
+
+    private void showMessage(String message, boolean isLongDuration) {
+        runOnUiThread(() -> Toast.makeText(this, message, isLongDuration ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show());
     }
 }

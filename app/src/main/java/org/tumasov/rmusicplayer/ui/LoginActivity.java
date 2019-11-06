@@ -64,10 +64,10 @@ public class LoginActivity extends AppCompatActivity {
 
         if (applicationSettings.contains("apiServer")
                 && applicationSettings.contains("username") && applicationSettings.contains("password")) {
-            addressTextView.setText(applicationSettings.getString("apiServer", ""));
-            loginTextView.setText(applicationSettings.getString("username", ""));
-            passwordTextView.setText(applicationSettings.getString("password", ""));
-            loginButton.callOnClick();
+//            addressTextView.setText(applicationSettings.getString("apiServer", ""));
+//            loginTextView.setText(applicationSettings.getString("username", ""));
+//            passwordTextView.setText(applicationSettings.getString("password", ""));
+//            loginButton.callOnClick();
         }
     }
 

@@ -28,8 +28,14 @@ public class ServerAPI {
     }
 
     public void register(@NonNull String serverUrl, @NonNull User user, @NonNull AsyncHttpExecutorListener listener) {
-        String requestBody = "{username: " + user.getUsername() + ", password: " + user.getPassword()  + ", " +
-                "name: " + user.getName() + ", lastname: " + user.getLastname() + "}";
+        String requestBody = "{" +
+                " \"username\":\"" + user.getUsername() + "\"," +
+                " \"password\":\"" + user.getPassword() + "\"," +
+                " \"name\":\"" + user.getName() + "\"," +
+                " \"lastname\":\"" + user.getLastname() + "\"" +
+                "}";
+//        String requestBody = "{\"username\": " + user.getUsername() + ", \"password\": " + user.getPassword()  + ", " +
+//                "\"name\": " + user.getName() + ", \"lastname\": " + user.getLastname() + "}";
         HttpRequest request = new HttpRequest.HttpBuilder(serverUrl + "api/register", "POST")
                 .doOutput(true)
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
