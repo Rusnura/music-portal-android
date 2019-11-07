@@ -1,6 +1,7 @@
 package org.tumasov.rmusicplayer.helpers.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +10,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.entities.Song;
+import org.tumasov.rmusicplayer.helpers.MP3Player;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
     private final List<Song> songs = new ArrayList<>();
+    private final String selectedAlbumId;
+    private final MP3Player mp3Player = MP3Player.getInstance();
+    private Context context;
+
+    public SongAdapter(String selectedAlbumId) { // TODO: Change this behaviour
+        this.selectedAlbumId = selectedAlbumId;
+    }
 
     @NonNull
     @Override
     public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
 
         int songItemLayout = R.layout.song_item;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -54,7 +64,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         void bind(int lastIndex) {
             songTitle.setText(songs.get(lastIndex).getTitle());
             songArtist.setText(songs.get(lastIndex).getArtist());
-            //songTitle.setOnClickListener();
+            songTitle.setOnClickListener((l) -> {
+                try {
+                    mp3Player.play(context, selectedAlbumId, songs.get(lastIndex).getId());
+                } catch (IOException e) {
+                    Log.e("SONG_ADAPTER", "Cannot to start playing MP3: " + e.getMessage(), e);
+                }
+            });
         }
     }
 }

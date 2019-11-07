@@ -3,6 +3,7 @@ package org.tumasov.rmusicplayer.helpers.api;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import org.json.JSONException;
+import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.entities.User;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
 import org.tumasov.rmusicplayer.entities.Token;
@@ -97,5 +98,13 @@ public class ServerAPI {
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
         new AsyncHttpExecutor(request, listener).execute();
+    }
+
+    public String getMP3FileLink(@NonNull String albumId, @NonNull String id) {
+        return SERVER_URL + "api/album/" + albumId + "/song/" + id + "/mp3";
+    }
+
+    public Token getToken() {
+        return token;
     }
 }

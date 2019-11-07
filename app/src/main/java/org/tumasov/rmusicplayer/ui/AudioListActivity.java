@@ -15,7 +15,6 @@ import org.tumasov.rmusicplayer.helpers.JSONUtils;
 import org.tumasov.rmusicplayer.helpers.adapters.SongAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +22,7 @@ public class AudioListActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
     private RecyclerView songsRecyclerView;
     private SharedPreferences applicationSettings;
+    private String selectedAlbumId;
     private static final String settingsName = "R_MUSIC_SETTINGS";
 
     private SongAdapter songAdapter;
@@ -34,18 +34,18 @@ public class AudioListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_audio_list);
         applicationSettings = getSharedPreferences(settingsName, MODE_PRIVATE);
-        String albumId = getIntent().getStringExtra("albumId");
+        selectedAlbumId = getIntent().getStringExtra("albumId");
         songsRecyclerView = findViewById(R.id.songs_list);
-        songAdapter = new SongAdapter();
+        songAdapter = new SongAdapter(selectedAlbumId);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         songsRecyclerView.setLayoutManager(linearLayoutManager);
         songsRecyclerView.setAdapter(songAdapter);
 
-        if (albumId != null) {
-            if (albumId.equals("all")) {
+        if (selectedAlbumId != null) {
+            if (selectedAlbumId.equals("all")) {
                 serverAPI.getMySongs(this::handleRequest);
             } else {
-                serverAPI.getSongsFromAlbum(albumId, this::handleRequest);
+                serverAPI.getSongsFromAlbum(selectedAlbumId, this::handleRequest);
             }
         }
     }
