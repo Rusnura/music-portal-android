@@ -47,11 +47,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
         SongViewHolder(@NonNull View itemView) {
             super(itemView);
+            songArtist = itemView.findViewById(R.id.song_item_artist);
             songTitle = itemView.findViewById(R.id.song_item_title);
         }
 
         void bind(int lastIndex) {
             songTitle.setText(songs.get(lastIndex).getTitle());
+            songArtist.setText(songs.get(lastIndex).getArtist());
             //songTitle.setOnClickListener();
         }
     }
