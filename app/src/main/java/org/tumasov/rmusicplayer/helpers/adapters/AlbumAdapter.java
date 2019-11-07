@@ -54,11 +54,16 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         AlbumViewHolder(@NonNull View itemView) {
             super(itemView);
             albumTitle = itemView.findViewById(R.id.album_item_title);
+            albumDescription = itemView.findViewById(R.id.album_item_description);
         }
 
         void bind(int listIndex) {
             albumTitle.setText(albums.get(listIndex).getName());
+            albumDescription.setText(albums.get(listIndex).getDescription());
+
+            // TODO: Change this
             albumTitle.setOnClickListener(e -> onClick(albums.get(listIndex)));
+            albumDescription.setOnClickListener(e -> onClick(albums.get(listIndex)));
         }
 
         void onClick(Album album) {

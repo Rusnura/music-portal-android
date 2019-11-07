@@ -16,6 +16,9 @@ import org.tumasov.rmusicplayer.helpers.adapters.SongAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class AudioListActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
     private RecyclerView songsRecyclerView;
@@ -52,17 +55,22 @@ public class AudioListActivity extends AppCompatActivity {
             try {
                 JSONObject jSongsPageable = JSONUtils.parseJSON(response.getBody());
                 JSONArray jSongs = jSongsPageable.getJSONArray("content");
+                List<Song> songs = new LinkedList<>();
                 for (int i = 0; i < jSongs.length(); i++) {
                     Song song = JSONUtils.getObjectFromJSON(jSongs.getJSONObject(i), Song.class);
-                    putElementToRootLayout(song);
+                    songs.add(song);
                 }
+                putElementsToRootLayout(songs);
             } catch (JSONException e) {
                 Log.e("CONTENT-ACTIVITY", "Cannot parse JSON!", e);
             }
         }
     }
 
-    private void putElementToRootLayout(Song song) {
-        runOnUiThread(() -> this.songAdapter.getSongs().add(song));
+    private void putElementsToRootLayout(List<Song> song) {
+        runOnUiThread(() -> {
+            songAdapter.getSongs().addAll(song);
+            songAdapter.notifyDataSetChanged();
+        });
     }
 }

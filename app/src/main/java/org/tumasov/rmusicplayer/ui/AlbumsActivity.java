@@ -18,6 +18,9 @@ import org.tumasov.rmusicplayer.helpers.adapters.AlbumAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.entities.Album;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class AlbumsActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
     private RecyclerView albumsRecyclerView;
@@ -48,12 +51,12 @@ public class AlbumsActivity extends AppCompatActivity {
                 try {
                     JSONObject jAlbumsPageable = JSONUtils.parseJSON(r.getBody());
                     JSONArray jAlbums = jAlbumsPageable.getJSONArray("content");
+                    List<Album> albums = new LinkedList<>();
                     for (int i = 0; i < jAlbums.length(); i++) {
                         Album album = JSONUtils.getObjectFromJSON(jAlbums.getJSONObject(i), Album.class);
-                        if (album != null) {
-                            putElementToRootLayout(album);
-                        }
+                        if (album != null) albums.add(album);
                     }
+                    putElementsToRootLayout(albums);
                 } catch (JSONException e) {
                     Log.e("CONTENT-ACTIVITY", "Cannot parse JSON!", e);
                 }
@@ -61,7 +64,10 @@ public class AlbumsActivity extends AppCompatActivity {
         });
     }
 
-    private void putElementToRootLayout(Album album) {
-        runOnUiThread(() -> albumAdapter.getAlbums().add(album));
+    private void putElementsToRootLayout(List<Album> albums) {
+        runOnUiThread(() -> {
+            albumAdapter.getAlbums().addAll(albums);
+            albumAdapter.notifyDataSetChanged();
+        });
     }
 }
