@@ -25,8 +25,8 @@ public class MP3Player {
         player.setOnPreparedListener((player) -> {
             if (onMP3PlayerPrepareComplete != null) {
                 onMP3PlayerPrepareComplete.onPrepareCompleted(this);
-                player.start();
             }
+            player.start();
         });
     }
 
