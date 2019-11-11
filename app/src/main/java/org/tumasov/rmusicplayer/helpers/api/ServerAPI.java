@@ -100,6 +100,14 @@ public class ServerAPI {
         new AsyncHttpExecutor(request, listener).execute();
     }
 
+    public void getMP3File(@NonNull String albumId, @NonNull String id, @NonNull AsyncHttpExecutorListener listener) {
+        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/album/"+albumId+"/songs", "GET")
+                .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
+                .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
+                .build();
+        new AsyncHttpExecutor(request, listener).execute();
+    }
+
     public String getMP3FileLink(@NonNull String albumId, @NonNull String id) {
         return SERVER_URL + "api/album/" + albumId + "/song/" + id + "/mp3";
     }

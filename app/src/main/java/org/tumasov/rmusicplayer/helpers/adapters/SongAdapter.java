@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.entities.Song;
+import org.tumasov.rmusicplayer.events.OnMediaClickListener;
 import org.tumasov.rmusicplayer.helpers.MP3Player;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,10 +20,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private final List<Song> songs = new ArrayList<>();
     private final String selectedAlbumId;
     private final MP3Player mp3Player = MP3Player.getInstance();
+    private final OnMediaClickListener onMediaClickListener;
     private Context context;
 
-    public SongAdapter(String selectedAlbumId) { // TODO: Change this behaviour
+    public SongAdapter(String selectedAlbumId, OnMediaClickListener onMediaClickListener) { // TODO: Change this behaviour
         this.selectedAlbumId = selectedAlbumId;
+        this.onMediaClickListener = onMediaClickListener;
     }
 
     @NonNull
@@ -62,13 +65,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         }
 
         void bind(int lastIndex) {
-            songTitle.setText(songs.get(lastIndex).getTitle());
-            songArtist.setText(songs.get(lastIndex).getArtist());
-            songTitle.setOnClickListener((l) -> {
-                try {
-                    mp3Player.play(context, selectedAlbumId, songs.get(lastIndex).getId());
-                } catch (IOException e) {
-                    Log.e("SONG_ADAPTER", "Cannot to start playing MP3: " + e.getMessage(), e);
+            Song song = songs.get(lastIndex);
+            songTitle.setText(song.getTitle());
+            songArtist.setText(song.getArtist());
+            songTitle.setOnClickListener(l -> {
+                if (onMediaClickListener != null) {
+                    onMediaClickListener.OnMediaClickListener(song);
                 }
             });
         }
