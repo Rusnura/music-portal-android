@@ -3,18 +3,14 @@ package org.tumasov.rmusicplayer.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +22,7 @@ import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
 import org.tumasov.rmusicplayer.services.AudioService;
 import org.tumasov.rmusicplayer.services.AudioServiceBinder;
-
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,24 +54,18 @@ public class AudioListActivity extends AppCompatActivity {
         applicationSettings = getSharedPreferences(settingsName, MODE_PRIVATE);
         selectedAlbumId = getIntent().getStringExtra("albumId");
         songsRecyclerView = findViewById(R.id.songs_list);
-        songAdapter = new SongAdapter(selectedAlbumId, (song) -> {
-            // Set web audio file url
-            audioServiceBinder.getHeaders().put("Authorization", "Bearer " + serverAPI.getToken().getToken());
-            audioServiceBinder.setAudioFileUrl(serverAPI.getMP3FileLink(selectedAlbumId, song.getId()));
-
-            // Web audio is a stream audio.
-            audioServiceBinder.setStreamAudio(true);
-
-            // Set application context.
-            audioServiceBinder.setContext(getApplicationContext());
+        songAdapter = new SongAdapter((song) -> {
+            try {
+                audioServiceBinder.getPlayer().play(getApplicationContext(), selectedAlbumId, song.getId());
+            } catch (IOException e) {
+                Log.e("AudioListActivity", "Cannot to start MP3 Player");
+            }
 
             // Initialize audio progress bar updater Handler object.
             // createAudioProgressbarUpdater();
             // audioServiceBinder.setAudioProgressUpdateHandler(audioProgressUpdateHandler);
-
-            // Start audio in background service.
-            audioServiceBinder.startAudio();
         });
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         songsRecyclerView.setLayoutManager(linearLayoutManager);
         songsRecyclerView.setAdapter(songAdapter);
@@ -124,7 +114,7 @@ public class AudioListActivity extends AppCompatActivity {
 
     // Unbound background audio service with caller activity.
     private void unBoundAudioService() {
-        if(audioServiceBinder != null) {
+        if (audioServiceBinder != null) {
             unbindService(serviceConnection);
         }
     }

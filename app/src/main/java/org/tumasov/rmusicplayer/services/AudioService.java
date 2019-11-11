@@ -5,10 +5,9 @@ import android.content.Intent;
 import android.os.IBinder;
 
 public class AudioService extends Service {
-    private AudioServiceBinder audioServiceBinder = new AudioServiceBinder();
+    private final AudioServiceBinder audioServiceBinder = new AudioServiceBinder();
 
-    public AudioService() {
-    }
+    public AudioService() {}
 
     @Override
     public IBinder onBind(Intent intent) {
