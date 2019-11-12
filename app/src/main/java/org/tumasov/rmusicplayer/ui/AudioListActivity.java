@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +36,19 @@ public class AudioListActivity extends AppCompatActivity {
     private static final String settingsName = "R_MUSIC_SETTINGS";
     private SongAdapter songAdapter;
     private AudioServiceBinder audioServiceBinder = null;
+    private Handler audioProgressUpdateHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // The update process message is sent from AudioServiceBinder class's thread object.
+            if (msg.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
+                int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
+
+                // Update progressbar. Make the value 10 times to show more clear UI change.
+                // backgroundAudioProgress.setProgress(currProgress*10);
+                Log.i("AudioListActivity", "Progress: " + currentProgress + "%");
+            }
+        }
+    };
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -62,8 +77,7 @@ public class AudioListActivity extends AppCompatActivity {
             }
 
             // Initialize audio progress bar updater Handler object.
-            // createAudioProgressbarUpdater();
-            // audioServiceBinder.setAudioProgressUpdateHandler(audioProgressUpdateHandler);
+            audioServiceBinder.getPlayer().setAudioProgressUpdateHandler(audioProgressUpdateHandler);
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
