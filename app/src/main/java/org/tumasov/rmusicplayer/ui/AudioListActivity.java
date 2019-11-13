@@ -7,12 +7,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
+import android.widget.SeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,24 +30,11 @@ import java.util.List;
 public class AudioListActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
     private RecyclerView songsRecyclerView;
-    private SharedPreferences applicationSettings;
+    private SeekBar audioPositionBar;
     private String selectedAlbumId;
-    private static final String settingsName = "R_MUSIC_SETTINGS";
     private SongAdapter songAdapter;
     private AudioServiceBinder audioServiceBinder = null;
-    private Handler audioProgressUpdateHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            // The update process message is sent from AudioServiceBinder class's thread object.
-            if (msg.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
-                int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
-
-                // Update progressbar. Make the value 10 times to show more clear UI change.
-                // backgroundAudioProgress.setProgress(currProgress*10);
-                Log.i("AudioListActivity", "Progress: " + currentProgress + "%");
-            }
-        }
-    };
+    private Handler audioProgressUpdateHandler;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -66,7 +52,7 @@ public class AudioListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_audio_list);
         bindAudioService();
-        applicationSettings = getSharedPreferences(settingsName, MODE_PRIVATE);
+        audioPositionBar = findViewById(R.id.audioPosition);
         selectedAlbumId = getIntent().getStringExtra("albumId");
         songsRecyclerView = findViewById(R.id.songs_list);
         songAdapter = new SongAdapter((song) -> {
@@ -91,6 +77,14 @@ public class AudioListActivity extends AppCompatActivity {
                 serverAPI.getSongsFromAlbum(selectedAlbumId, this::handleRequest);
             }
         }
+
+        audioProgressUpdateHandler = new Handler(message -> {
+            if (message.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
+                int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
+                audioPositionBar.setProgress(currentProgress);
+            }
+            return true;
+        });
     }
 
     private void handleRequest(HttpResponse response) {
@@ -126,7 +120,6 @@ public class AudioListActivity extends AppCompatActivity {
         }
     }
 
-    // Unbound background audio service with caller activity.
     private void unBoundAudioService() {
         if (audioServiceBinder != null) {
             unbindService(serviceConnection);
@@ -135,7 +128,6 @@ public class AudioListActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        // Unbound background audio service when activity is destroyed.
         unBoundAudioService();
         super.onDestroy();
     }
