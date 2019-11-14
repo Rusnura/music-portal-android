@@ -11,10 +11,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.tumasov.rmusicplayer.PlayerActivity;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
@@ -30,6 +34,7 @@ import java.util.List;
 public class AudioListActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
     private RecyclerView songsRecyclerView;
+    private RelativeLayout footerRelativeLayout;
     private SeekBar audioPositionBar;
     private String selectedAlbumId;
     private SongAdapter songAdapter;
@@ -49,15 +54,19 @@ public class AudioListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_audio_list);
-        bindAudioService();
+
+        footerRelativeLayout = findViewById(R.id.audio_list_footer);
         audioPositionBar = findViewById(R.id.audioPosition);
         selectedAlbumId = getIntent().getStringExtra("albumId");
         songsRecyclerView = findViewById(R.id.songs_list);
         songAdapter = new SongAdapter((song) -> {
             try {
                 audioServiceBinder.getPlayer().play(getApplicationContext(), selectedAlbumId, song.getId());
+                if (footerRelativeLayout.getVisibility() != View.VISIBLE) {
+                    footerRelativeLayout.setVisibility(View.VISIBLE);
+                    startActivity(new Intent(this, PlayerActivity.class));
+                }
             } catch (IOException e) {
                 Log.e("AudioListActivity", "Cannot to start MP3 Player");
             }
@@ -78,6 +87,7 @@ public class AudioListActivity extends AppCompatActivity {
             }
         }
 
+        bindAudioService();
         audioProgressUpdateHandler = new Handler(message -> {
             if (message.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
                 int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
@@ -112,7 +122,7 @@ public class AudioListActivity extends AppCompatActivity {
     }
 
     private void bindAudioService() {
-        if(audioServiceBinder == null) {
+        if (audioServiceBinder == null) {
             Intent intent = new Intent(AudioListActivity.this, AudioService.class);
 
             // Below code will invoke serviceConnection's onServiceConnected method.

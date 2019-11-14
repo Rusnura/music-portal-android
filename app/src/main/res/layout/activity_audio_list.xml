@@ -8,7 +8,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/footer">
+        android:layout_above="@id/audio_list_footer">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/songs_list"
             android:layout_width="match_parent"
@@ -17,12 +17,12 @@
     </ScrollView>
 
     <RelativeLayout
-        android:id="@+id/footer"
+        android:id="@+id/audio_list_footer"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#FC0"
-        android:gravity="center" >
+        android:background="#FC0">
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -12,10 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.AudioListActivity"></activity>
+        <activity android:name=".PlayerActivity"></activity>
+        <activity android:name=".ui.AudioListActivity" />
         <activity android:name=".ui.AlbumsActivity" />
         <activity android:name=".ui.SignUpActivity" />
-        <service android:name=".services.AudioService" android:enabled="true" android:exported="true"></service>
+
+        <service
+            android:name=".services.AudioService"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity android:name=".ui.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

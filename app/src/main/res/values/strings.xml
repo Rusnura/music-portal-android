@@ -24,4 +24,7 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="get_all_songs">Get all songs</string>
+    <string name="previous_song"><![CDATA[<<]]></string>
+    <string name="pause_song">||</string>
+    <string name="next_song"><![CDATA[>>]]></string>
 </resources>

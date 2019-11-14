@@ -97,6 +97,9 @@ public class MP3Player {
         return 0;
     }
 
+    public boolean isPlaying() {
+        return player.isPlaying();
+    }
 
     public Song getPlayingSong() {
         return playingSong;
