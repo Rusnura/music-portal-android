@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import org.json.JSONArray;
@@ -33,7 +32,6 @@ import java.util.List;
 
 public class AudioListActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
-    private RecyclerView songsRecyclerView;
     private RelativeLayout footerRelativeLayout;
     private SeekBar audioPositionBar;
     private String selectedAlbumId;
@@ -45,6 +43,8 @@ public class AudioListActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             audioServiceBinder = (AudioServiceBinder) iBinder;
+            audioServiceBinder.getPlayer().setAudioProgressUpdateHandler(audioProgressUpdateHandler);
+            Log.i("AudioListActivity", "onServiceConnected successfully!");
         }
 
         @Override
@@ -59,7 +59,7 @@ public class AudioListActivity extends AppCompatActivity {
         footerRelativeLayout = findViewById(R.id.audio_list_footer);
         audioPositionBar = findViewById(R.id.audioPosition);
         selectedAlbumId = getIntent().getStringExtra("albumId");
-        songsRecyclerView = findViewById(R.id.songs_list);
+        RecyclerView songsRecyclerView = findViewById(R.id.songs_list);
         songAdapter = new SongAdapter((song) -> {
             try {
                 audioServiceBinder.getPlayer().play(getApplicationContext(), selectedAlbumId, song.getId());
@@ -70,9 +70,6 @@ public class AudioListActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.e("AudioListActivity", "Cannot to start MP3 Player");
             }
-
-            // Initialize audio progress bar updater Handler object.
-            audioServiceBinder.getPlayer().setAudioProgressUpdateHandler(audioProgressUpdateHandler);
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -87,7 +84,6 @@ public class AudioListActivity extends AppCompatActivity {
             }
         }
 
-        bindAudioService();
         audioProgressUpdateHandler = new Handler(message -> {
             if (message.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
                 int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
@@ -95,6 +91,18 @@ public class AudioListActivity extends AppCompatActivity {
             }
             return true;
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        bindAudioService();
+    }
+
+    @Override
+    public void onPause() {
+        unBoundAudioService();
+        super.onPause();
     }
 
     private void handleRequest(HttpResponse response) {
@@ -127,13 +135,18 @@ public class AudioListActivity extends AppCompatActivity {
 
             // Below code will invoke serviceConnection's onServiceConnected method.
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+            Log.i("AudioListActivity", "bindAudioService successfully!");
         }
+        Log.i("AudioListActivity", "bindAudioService ended!");
     }
 
     private void unBoundAudioService() {
         if (audioServiceBinder != null) {
             unbindService(serviceConnection);
+            audioServiceBinder = null;
+            Log.i("AudioListActivity", "unBoundAudioService successfully!");
         }
+        Log.i("AudioListActivity", "unBoundAudioService ended!");
     }
 
     @Override
