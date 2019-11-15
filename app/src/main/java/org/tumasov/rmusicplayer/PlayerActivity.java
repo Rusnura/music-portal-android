@@ -1,7 +1,6 @@
 package org.tumasov.rmusicplayer;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,12 +8,11 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.SeekBar;
-
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.services.AudioService;
 import org.tumasov.rmusicplayer.services.AudioServiceBinder;
-import org.tumasov.rmusicplayer.ui.AudioListActivity;
 
 public class PlayerActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
@@ -27,6 +25,7 @@ public class PlayerActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             audioServiceBinder = (AudioServiceBinder) iBinder;
             audioServiceBinder.getPlayer().setAudioProgressUpdateHandler(audioProgressUpdateHandler);
+            Log.i("PlayerActivity", "onServiceConnected successfully!");
         }
 
         @Override
@@ -41,15 +40,15 @@ public class PlayerActivity extends AppCompatActivity {
         bindAudioService();
 
         audioProgressUpdateHandler = new Handler(message -> {
-            if (message.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
-                int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
-                audioPositionBar.setProgress(currentProgress);
+            if (audioServiceBinder != null) {
+                if (message.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
+                    int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
+                    audioPositionBar.setProgress(currentProgress);
+                }
+                return true;
             }
-            return true;
+            return false;
         });
-
-        // Initialize audio progress bar updater Handler object.
-
     }
 
     private void bindAudioService() {
@@ -62,7 +61,20 @@ public class PlayerActivity extends AppCompatActivity {
     private void unBoundAudioService() {
         if (audioServiceBinder != null) {
             unbindService(serviceConnection);
+            audioServiceBinder = null;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        bindAudioService();
+    }
+
+    @Override
+    public void onPause() {
+        unBoundAudioService();
+        super.onPause();
     }
 
     @Override

@@ -85,11 +85,14 @@ public class AudioListActivity extends AppCompatActivity {
         }
 
         audioProgressUpdateHandler = new Handler(message -> {
-            if (message.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
-                int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
-                audioPositionBar.setProgress(currentProgress);
+            if (audioServiceBinder != null) {
+                if (message.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
+                    int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
+                    audioPositionBar.setProgress(currentProgress);
+                }
+                return true;
             }
-            return true;
+            return false;
         });
     }
 
