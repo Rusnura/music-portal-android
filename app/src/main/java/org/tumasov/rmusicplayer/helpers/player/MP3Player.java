@@ -32,10 +32,12 @@ public class MP3Player {
         @Override
         public void run() {
             while (true) {
-                Message updateAudioProgressMsg = new Message();
-                updateAudioProgressMsg.what = PlayerMessages.UPDATE_AUDIO_PROGRESS_BAR;
-                if (audioProgressUpdateHandler != null) {
-                    audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+                if (isPlaying()) {
+                    Message updateAudioProgressMsg = new Message();
+                    updateAudioProgressMsg.what = PlayerMessages.UPDATE_AUDIO_PROGRESS_BAR;
+                    if (audioProgressUpdateHandler != null) {
+                        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+                    }
                 }
 
                 try {
