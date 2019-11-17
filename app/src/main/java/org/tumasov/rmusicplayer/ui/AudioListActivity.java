@@ -67,7 +67,7 @@ public class AudioListActivity extends AppCompatActivity {
         songsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         songAdapter = new SongAdapter((song) -> {
             try {
-                audioServiceBinder.getPlayer().play(getApplicationContext(), selectedAlbumId, song.getId());
+                audioServiceBinder.getPlayer().play(getApplicationContext(), song);
                 if (footerRelativeLayout.getVisibility() != View.VISIBLE) {
                     footerRelativeLayout.setVisibility(View.VISIBLE);
                 }

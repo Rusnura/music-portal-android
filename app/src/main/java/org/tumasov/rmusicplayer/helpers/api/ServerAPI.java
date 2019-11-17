@@ -108,8 +108,8 @@ public class ServerAPI {
         new AsyncHttpExecutor(request, listener).execute();
     }
 
-    public String getMP3FileLink(@NonNull String albumId, @NonNull String id) {
-        return SERVER_URL + "api/album/" + albumId + "/song/" + id + "/mp3";
+    public String getMP3FileLink(@NonNull Song song) {
+        return SERVER_URL + "api/album/" + song.getAlbumId() + "/song/" + song.getId() + "/mp3";
     }
 
     public Token getToken() {
