@@ -25,12 +25,14 @@
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:orientation="horizontal">
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pause_song"
                 android:layout_gravity="start"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:backgroundTint="#FF6600"
+                android:textColor="#FFFFFF" />
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,13 +40,15 @@
                 android:layout_gravity="center_vertical"
                 android:padding="10dp"
                 android:layout_weight="2"/>
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/audio_list_open_player_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PL"
                 android:layout_gravity="end"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:backgroundTint="#FF6600"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
