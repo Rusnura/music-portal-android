@@ -8,34 +8,36 @@ import android.os.Handler;
 import android.os.Message;
 import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
-import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerPrepareComplete;
+import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerCompletedListener;
+import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerErrorListener;
+import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerPrePrepareListener;
+import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerPrepareCompleteListener;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MP3Player {
-    private static MP3Player instance = null;
-    private ServerAPI serverAPI = ServerAPI.getInstance();
-    private MediaPlayer player = new MediaPlayer();
-    private Song playingSong = null;
-    private Map<String, String> headers = new LinkedHashMap<>();
-    private MP3PlayerPrepareComplete onMP3PlayerPrepareComplete;
+    private MP3PlayerPrePrepareListener onMP3PlayerPrePrepareListener;
+    private MP3PlayerPrepareCompleteListener onMP3PlayerPrepareCompleteListener;
+    private MP3PlayerErrorListener onMP3PlayerErrorListener;
+    private MP3PlayerCompletedListener onMP3PlayerCompletedListener;
 
+    private static MP3Player instance = null;
+    private ServerAPI serverAPI = ServerAPI.getInstance(); // FIXME: Player don't must known about serverAPI
+    private MediaPlayer player = new MediaPlayer();
+    private Song playingSong;
+    private Map<String, String> headers = new LinkedHashMap<>();
     private Handler audioProgressUpdateHandler;
     private Thread updateAudioProgressThread = new Thread() {
         @Override
         public void run() {
             while (true) {
                 Message updateAudioProgressMsg = new Message();
-                // Create update audio progress message.
                 updateAudioProgressMsg.what = PlayerMessages.UPDATE_AUDIO_PROGRESS_BAR;
-
-                // Send the message to caller activity's update audio prgressbar Handler object.
                 if (audioProgressUpdateHandler != null) {
                     audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
                 }
 
-                // Sleep one second.
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
@@ -50,10 +52,23 @@ public class MP3Player {
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         updateAudioProgressThread.start();
         player.setOnPreparedListener((player) -> {
-            if (onMP3PlayerPrepareComplete != null) {
-                onMP3PlayerPrepareComplete.onPrepareCompleted(this);
+            if (onMP3PlayerPrepareCompleteListener != null) {
+                onMP3PlayerPrepareCompleteListener.onPrepareCompleted(this);
             }
             player.start();
+        });
+
+        player.setOnErrorListener((player, what, extra) -> {
+            if (onMP3PlayerErrorListener != null) {
+                return onMP3PlayerErrorListener.onError(this, what, extra);
+            }
+            return false;
+        });
+
+        player.setOnCompletionListener((player) -> {
+            if (onMP3PlayerCompletedListener != null) {
+                onMP3PlayerCompletedListener.onCompleted(this);
+            }
         });
     }
 
@@ -64,12 +79,17 @@ public class MP3Player {
         return instance;
     }
 
-    public void play(Context context, String albumId, String songId) throws IOException {
+    public void play(Context context, Song song) throws IOException {
+        if (onMP3PlayerPrePrepareListener != null) {
+            onMP3PlayerPrePrepareListener.onPrePrepare(this);
+        }
+
         if (player.isPlaying()) {
             player.stop();
         }
         player.reset();
-        player.setDataSource(context, Uri.parse(serverAPI.getMP3FileLink(albumId, songId)), headers);
+        player.setDataSource(context, Uri.parse(serverAPI.getMP3FileLink(song)), headers);
+        this.playingSong = song;
         player.prepareAsync();
     }
 
@@ -104,8 +124,8 @@ public class MP3Player {
         return playingSong;
     }
 
-    public void setOnMP3PlayerPrepareComplete(MP3PlayerPrepareComplete onMP3PlayerPrepareComplete) {
-        this.onMP3PlayerPrepareComplete = onMP3PlayerPrepareComplete;
+    public void setOnMP3PlayerPrepareCompleteListener(MP3PlayerPrepareCompleteListener onMP3PlayerPrepareCompleteListener) {
+        this.onMP3PlayerPrepareCompleteListener = onMP3PlayerPrepareCompleteListener;
     }
 
     public Handler getAudioProgressUpdateHandler() {
