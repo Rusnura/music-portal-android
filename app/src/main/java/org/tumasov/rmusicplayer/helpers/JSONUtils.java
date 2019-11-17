@@ -25,14 +25,15 @@ public class JSONUtils {
             T object = clazz.newInstance();
             for (Field field: clazz.getDeclaredFields()) {
                 String fieldName = field.getName();
-                if (!json.has(fieldName)) {
+                if (json.has(fieldName)) {
+                    Class fieldType = field.getType();
+                    String methodName = "set" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
+                    Method setter = object.getClass().getMethod(methodName, fieldType);
+                    setter.setAccessible(true);
+                    setter.invoke(object, json.get(fieldName));
+                } else {
                     Log.w("JSONUtils", "Json object don't contains field: " + fieldName + "! Skipping...");
                 }
-                Class fieldType = field.getType();
-                String methodName = "set" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
-                Method setter = object.getClass().getMethod(methodName, fieldType);
-                setter.setAccessible(true);
-                setter.invoke(object, json.get(fieldName));
             }
             return object;
         } catch (Exception e) {

@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.SeekBar;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
+import org.tumasov.rmusicplayer.helpers.player.PlayerMessages;
 import org.tumasov.rmusicplayer.services.AudioService;
 import org.tumasov.rmusicplayer.services.AudioServiceBinder;
 
@@ -39,9 +40,9 @@ public class PlayerActivity extends AppCompatActivity {
         audioPositionBar = findViewById(R.id.player_audioPosition);
         bindAudioService();
 
-        audioProgressUpdateHandler = new Handler(message -> {
+        audioProgressUpdateHandler = new Handler(message -> { // FIXME: Duplicate
             if (audioServiceBinder != null) {
-                if (message.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
+                if (message.what == PlayerMessages.UPDATE_AUDIO_PROGRESS_BAR) {
                     int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
                     audioPositionBar.setProgress(currentProgress);
                 }
