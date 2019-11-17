@@ -1,4 +1,4 @@
-package org.tumasov.rmusicplayer.helpers;
+package org.tumasov.rmusicplayer.helpers.player;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -22,14 +22,13 @@ public class MP3Player {
     private MP3PlayerPrepareComplete onMP3PlayerPrepareComplete;
 
     private Handler audioProgressUpdateHandler;
-    public final int UPDATE_AUDIO_PROGRESS_BAR = 1;
     private Thread updateAudioProgressThread = new Thread() {
         @Override
         public void run() {
             while (true) {
                 Message updateAudioProgressMsg = new Message();
                 // Create update audio progress message.
-                updateAudioProgressMsg.what = UPDATE_AUDIO_PROGRESS_BAR;
+                updateAudioProgressMsg.what = PlayerMessages.UPDATE_AUDIO_PROGRESS_BAR;
 
                 // Send the message to caller activity's update audio prgressbar Handler object.
                 if (audioProgressUpdateHandler != null) {
@@ -38,7 +37,7 @@ public class MP3Player {
 
                 // Sleep one second.
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException ex) {
                     // NOP
                 }

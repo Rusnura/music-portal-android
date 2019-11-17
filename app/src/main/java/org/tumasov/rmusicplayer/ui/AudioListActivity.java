@@ -1,6 +1,7 @@
 package org.tumasov.rmusicplayer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.ComponentName;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import org.json.JSONArray;
@@ -24,6 +26,7 @@ import org.tumasov.rmusicplayer.helpers.JSONUtils;
 import org.tumasov.rmusicplayer.helpers.adapters.SongAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
+import org.tumasov.rmusicplayer.helpers.player.PlayerMessages;
 import org.tumasov.rmusicplayer.services.AudioService;
 import org.tumasov.rmusicplayer.services.AudioServiceBinder;
 import java.io.IOException;
@@ -34,6 +37,7 @@ public class AudioListActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
     private RelativeLayout footerRelativeLayout;
     private SeekBar audioPositionBar;
+    private Button openPlayerButton;
     private String selectedAlbumId;
     private SongAdapter songAdapter;
     private AudioServiceBinder audioServiceBinder = null;
@@ -44,7 +48,6 @@ public class AudioListActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             audioServiceBinder = (AudioServiceBinder) iBinder;
             audioServiceBinder.getPlayer().setAudioProgressUpdateHandler(audioProgressUpdateHandler);
-            Log.i("AudioListActivity", "onServiceConnected successfully!");
         }
 
         @Override
@@ -58,14 +61,15 @@ public class AudioListActivity extends AppCompatActivity {
 
         footerRelativeLayout = findViewById(R.id.audio_list_footer);
         audioPositionBar = findViewById(R.id.audioPosition);
+        openPlayerButton = findViewById(R.id.audio_list_open_player_button);
         selectedAlbumId = getIntent().getStringExtra("albumId");
         RecyclerView songsRecyclerView = findViewById(R.id.songs_list);
+        songsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         songAdapter = new SongAdapter((song) -> {
             try {
                 audioServiceBinder.getPlayer().play(getApplicationContext(), selectedAlbumId, song.getId());
                 if (footerRelativeLayout.getVisibility() != View.VISIBLE) {
                     footerRelativeLayout.setVisibility(View.VISIBLE);
-                    startActivity(new Intent(this, PlayerActivity.class));
                 }
             } catch (IOException e) {
                 Log.e("AudioListActivity", "Cannot to start MP3 Player");
@@ -75,6 +79,10 @@ public class AudioListActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         songsRecyclerView.setLayoutManager(linearLayoutManager);
         songsRecyclerView.setAdapter(songAdapter);
+
+        openPlayerButton.setOnClickListener((l) -> {
+            startActivity(new Intent(this, PlayerActivity.class));
+        });
 
         if (selectedAlbumId != null) {
             if (selectedAlbumId.equals("all")) {
@@ -86,7 +94,7 @@ public class AudioListActivity extends AppCompatActivity {
 
         audioProgressUpdateHandler = new Handler(message -> {
             if (audioServiceBinder != null) {
-                if (message.what == audioServiceBinder.getPlayer().UPDATE_AUDIO_PROGRESS_BAR) {
+                if (message.what == PlayerMessages.UPDATE_AUDIO_PROGRESS_BAR) {
                     int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
                     audioPositionBar.setProgress(currentProgress);
                 }
@@ -94,18 +102,6 @@ public class AudioListActivity extends AppCompatActivity {
             }
             return false;
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        bindAudioService();
-    }
-
-    @Override
-    public void onPause() {
-        unBoundAudioService();
-        super.onPause();
     }
 
     private void handleRequest(HttpResponse response) {
@@ -150,6 +146,18 @@ public class AudioListActivity extends AppCompatActivity {
             Log.i("AudioListActivity", "unBoundAudioService successfully!");
         }
         Log.i("AudioListActivity", "unBoundAudioService ended!");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        bindAudioService();
+    }
+
+    @Override
+    public void onPause() {
+        unBoundAudioService();
+        super.onPause();
     }
 
     @Override

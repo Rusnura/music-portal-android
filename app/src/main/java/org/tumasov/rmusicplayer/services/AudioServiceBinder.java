@@ -1,7 +1,7 @@
 package org.tumasov.rmusicplayer.services;
 
 import android.os.Binder;
-import org.tumasov.rmusicplayer.helpers.MP3Player;
+import org.tumasov.rmusicplayer.helpers.player.MP3Player;
 
 public class AudioServiceBinder extends Binder {
     private final MP3Player player = MP3Player.getInstance();

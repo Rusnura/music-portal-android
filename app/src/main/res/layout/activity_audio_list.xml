@@ -21,13 +21,30 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#FC0">
-        <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/audioPosition"
-            android:padding="10dp">
-        </SeekBar>
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pause_song"
+                android:layout_gravity="start"
+                android:layout_weight="1"/>
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/audioPosition"
+                android:layout_gravity="center_vertical"
+                android:padding="10dp"
+                android:layout_weight="2"/>
+            <Button
+                android:id="@+id/audio_list_open_player_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PL"
+                android:layout_gravity="end"
+                android:layout_weight="1"/>
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
