@@ -22,6 +22,7 @@ public class HttpExecutor {
         try {
             connection.setRequestMethod(request.getMethod());
             connection.setUseCaches(request.isUseCache());
+            connection.setConnectTimeout(request.getConnectionTimeout());
             connection.setReadTimeout(request.getReadTimeout());
             connection.setDoInput(request.isDoInput());
             connection.setDoOutput(request.isDoOutput());

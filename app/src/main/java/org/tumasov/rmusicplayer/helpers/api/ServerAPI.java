@@ -50,6 +50,7 @@ public class ServerAPI {
         String requestBody = "{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}";
         HttpRequest request = new HttpRequest.HttpBuilder(serverUrl + "api/authenticate", "POST")
                 .doOutput(true)
+                .connectionTimeout(10 * 1000)
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .body(requestBody)
                 .build();
