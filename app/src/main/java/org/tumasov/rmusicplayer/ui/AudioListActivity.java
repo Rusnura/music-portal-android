@@ -95,12 +95,35 @@ public class AudioListActivity extends AppCompatActivity {
         audioProgressUpdateHandler = new Handler(message -> {
             if (audioServiceBinder != null) {
                 if (message.what == PlayerMessages.UPDATE_AUDIO_PROGRESS_BAR) {
-                    int currentProgress = audioServiceBinder.getPlayer().getAudioProgress();
+                    int currentProgress = audioServiceBinder.getPlayer().getCurrentAudioPosition();
+                    int totalProgress = audioServiceBinder.getPlayer().getTotalAudioDuration();
+                    if (totalProgress != audioPositionBar.getMax()) {
+                        audioPositionBar.setMax(totalProgress);
+                    }
                     audioPositionBar.setProgress(currentProgress);
                 }
                 return true;
             }
             return false;
+        });
+
+        audioPositionBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser && audioServiceBinder != null) {
+                    audioServiceBinder.getPlayer().setProgress(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
         });
     }
 

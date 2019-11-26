@@ -103,19 +103,16 @@ public class MP3Player {
     }
 
     public int getTotalAudioDuration() {
-        if (player != null && player.isPlaying()) {
+        if (player != null) {
             return player.getDuration();
         }
         return 0;
     }
 
-    public int getAudioProgress() {
-        int currAudioPosition = getCurrentAudioPosition();
-        int totalAudioDuration = getTotalAudioDuration();
-        if (totalAudioDuration > 0) {
-            return (currAudioPosition * 100) / totalAudioDuration;
+    public void setProgress(int msec) {
+        if (player != null) {
+            player.seekTo(msec);
         }
-        return 0;
     }
 
     public boolean isPlaying() {
