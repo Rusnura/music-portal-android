@@ -4,7 +4,7 @@ public class Song {
     private String id;
     private String title;
     private String artist;
-    private String albumId;
+    private String playlistId;
     private String uploadDate; // TODO: Change to Date java type
 
     public String getId() {
@@ -31,12 +31,12 @@ public class Song {
         this.artist = artist;
     }
 
-    public String getAlbumId() {
-        return albumId;
+    public String getPlaylistId() {
+        return playlistId;
     }
 
-    public void setAlbumId(String albumId) {
-        this.albumId = albumId;
+    public void setPlaylistId(String playlistId) {
+        this.playlistId = playlistId;
     }
 
     public String getUploadDate() {

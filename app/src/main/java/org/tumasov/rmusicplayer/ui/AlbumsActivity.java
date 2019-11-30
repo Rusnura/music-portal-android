@@ -46,7 +46,7 @@ public class AlbumsActivity extends AppCompatActivity {
 //        getAllSongsButton = findViewById(R.id.allSongs_btn);
 //        getAllSongsButton.setOnClickListener(l -> onClickToAlbumButton("all"));
 
-        serverAPI.getMyAlbums(r -> {
+        serverAPI.getMyPlaylists(r -> {
             if (r.isSuccessful()) {
                 try {
                     JSONObject jAlbumsPageable = JSONUtils.parseJSON(r.getBody());

@@ -88,7 +88,7 @@ public class AudioListActivity extends AppCompatActivity {
             if (selectedAlbumId.equals("all")) {
                 serverAPI.getMySongs(this::handleRequest);
             } else {
-                serverAPI.getSongsFromAlbum(selectedAlbumId, this::handleRequest);
+                serverAPI.getSongsFromPlaylist(selectedAlbumId, this::handleRequest);
             }
         }
 

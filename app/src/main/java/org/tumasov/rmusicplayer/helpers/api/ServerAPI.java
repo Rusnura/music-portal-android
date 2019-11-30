@@ -11,7 +11,6 @@ import org.tumasov.rmusicplayer.helpers.http.AsyncHttpExecutor;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpParameter;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpRequest;
 import org.tumasov.rmusicplayer.helpers.http.interfaces.AsyncHttpExecutorListener;
-import java.text.MessageFormat;
 
 public class ServerAPI {
     private static ServerAPI instance;
@@ -69,16 +68,16 @@ public class ServerAPI {
         new AsyncHttpExecutor(request, authListener).execute();
     }
 
-    public void getMyAlbums(@NonNull AsyncHttpExecutorListener listener) {
-        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/albums", "GET")
+    public void getMyPlaylists(@NonNull AsyncHttpExecutorListener listener) {
+        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/playlists", "GET")
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
         new AsyncHttpExecutor(request, listener).execute();
     }
 
-    public void getAlbums(@NonNull String username, @NonNull AsyncHttpExecutorListener listener) {
-        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/user/"+username+"/albums", "GET")
+    public void getPlaylists(@NonNull String username, @NonNull AsyncHttpExecutorListener listener) {
+        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/user/"+username+"/playlists", "GET")
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
@@ -93,16 +92,16 @@ public class ServerAPI {
         new AsyncHttpExecutor(request, listener).execute();
     }
 
-    public void getSongsFromAlbum(@NonNull String albumId, @NonNull AsyncHttpExecutorListener listener) {
-        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/album/"+albumId+"/songs", "GET")
+    public void getSongsFromPlaylist(@NonNull String albumId, @NonNull AsyncHttpExecutorListener listener) {
+        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/playlist/"+albumId+"/songs", "GET")
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
         new AsyncHttpExecutor(request, listener).execute();
     }
 
-    public void getMP3File(@NonNull String albumId, @NonNull String id, @NonNull AsyncHttpExecutorListener listener) {
-        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/album/"+albumId+"/songs", "GET")
+    public void getMP3File(@NonNull String playlistId, @NonNull String id, @NonNull AsyncHttpExecutorListener listener) {
+        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/playlist/"+playlistId+"/songs", "GET")
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
@@ -110,7 +109,7 @@ public class ServerAPI {
     }
 
     public String getMP3FileLink(@NonNull Song song) {
-        return SERVER_URL + "api/album/" + song.getAlbumId() + "/song/" + song.getId() + "/mp3";
+        return SERVER_URL + "api/playlist/" + song.getPlaylistId() + "/song/" + song.getId() + "/mp3";
     }
 
     public Token getToken() {
