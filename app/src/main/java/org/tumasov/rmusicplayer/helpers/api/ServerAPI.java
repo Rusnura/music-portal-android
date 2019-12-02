@@ -34,8 +34,6 @@ public class ServerAPI {
                 " \"name\":\"" + user.getName() + "\"," +
                 " \"lastname\":\"" + user.getLastname() + "\"" +
                 "}";
-//        String requestBody = "{\"username\": " + user.getUsername() + ", \"password\": " + user.getPassword()  + ", " +
-//                "\"name\": " + user.getName() + ", \"lastname\": " + user.getLastname() + "}";
         HttpRequest request = new HttpRequest.HttpBuilder(serverUrl + "api/register", "POST")
                 .doOutput(true)
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
@@ -92,8 +90,8 @@ public class ServerAPI {
         new AsyncHttpExecutor(request, listener).execute();
     }
 
-    public void getSongsFromPlaylist(@NonNull String albumId, @NonNull AsyncHttpExecutorListener listener) {
-        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/playlist/"+albumId+"/songs", "GET")
+    public void getSongsFromPlaylist(@NonNull String playlistId, @NonNull AsyncHttpExecutorListener listener) {
+        HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/playlist/"+playlistId+"/songs", "GET")
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();

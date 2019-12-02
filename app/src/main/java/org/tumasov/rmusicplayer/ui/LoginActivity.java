@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loadingBar;
     private SharedPreferences applicationSettings;
     private static Intent openSignUpActivity;
-    private static Intent openAlbumsActivity;
+    private static Intent openPlaylistsActivity;
     private static final String settingsName = "R_MUSIC_SETTINGS";
 
     @Override
@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         loginTextView = findViewById(R.id.login_username);
         passwordTextView = findViewById(R.id.login_password);
         openSignUpActivity = new Intent(this, SignUpActivity.class);
-        openAlbumsActivity = new Intent(this, AlbumsActivity.class);
+        openPlaylistsActivity = new Intent(this, PlaylistsActivity.class);
 
         loadingBar.setVisibility(View.INVISIBLE);
 
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                                 settingsEditor.putString("username", loginTextView.getText().toString());
                                 settingsEditor.putString("password", passwordTextView.getText().toString());
                                 settingsEditor.apply();
-                                startActivity(openAlbumsActivity);
+                                startActivity(openPlaylistsActivity);
                             }
                         });
             }

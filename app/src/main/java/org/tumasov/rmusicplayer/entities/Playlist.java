@@ -1,6 +1,6 @@
 package org.tumasov.rmusicplayer.entities;
 
-public class Album {
+public class Playlist {
     private String id;
     private String name;
     private String description;
@@ -49,7 +49,7 @@ public class Album {
 
     @Override
     public String toString() {
-        return "Album{" +
+        return "Playlist{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

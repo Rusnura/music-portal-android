@@ -33,12 +33,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AudioListActivity extends AppCompatActivity {
+public class SongsActivity extends AppCompatActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
     private RelativeLayout footerRelativeLayout;
     private SeekBar audioPositionBar;
     private Button openPlayerButton;
-    private String selectedAlbumId;
+    private String selectedPlaylistId;
     private SongAdapter songAdapter;
     private AudioServiceBinder audioServiceBinder = null;
     private Handler audioProgressUpdateHandler;
@@ -57,12 +57,12 @@ public class AudioListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_audio_list);
+        setContentView(R.layout.activity_songs);
 
         footerRelativeLayout = findViewById(R.id.audio_list_footer);
         audioPositionBar = findViewById(R.id.audioPosition);
         openPlayerButton = findViewById(R.id.audio_list_open_player_button);
-        selectedAlbumId = getIntent().getStringExtra("albumId");
+        selectedPlaylistId = getIntent().getStringExtra("playlistId");
         RecyclerView songsRecyclerView = findViewById(R.id.songs_list);
         songsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         songAdapter = new SongAdapter((song) -> {
@@ -72,7 +72,7 @@ public class AudioListActivity extends AppCompatActivity {
                     footerRelativeLayout.setVisibility(View.VISIBLE);
                 }
             } catch (IOException e) {
-                Log.e("AudioListActivity", "Cannot to start MP3 Player");
+                Log.e("SongsActivity", "Cannot to start MP3 Player");
             }
         });
 
@@ -84,11 +84,11 @@ public class AudioListActivity extends AppCompatActivity {
             startActivity(new Intent(this, PlayerActivity.class));
         });
 
-        if (selectedAlbumId != null) {
-            if (selectedAlbumId.equals("all")) {
+        if (selectedPlaylistId != null) {
+            if (selectedPlaylistId.equals("all")) {
                 serverAPI.getMySongs(this::handleRequest);
             } else {
-                serverAPI.getSongsFromPlaylist(selectedAlbumId, this::handleRequest);
+                serverAPI.getSongsFromPlaylist(selectedPlaylistId, this::handleRequest);
             }
         }
 
@@ -153,22 +153,22 @@ public class AudioListActivity extends AppCompatActivity {
 
     private void bindAudioService() {
         if (audioServiceBinder == null) {
-            Intent intent = new Intent(AudioListActivity.this, AudioService.class);
+            Intent intent = new Intent(SongsActivity.this, AudioService.class);
 
             // Below code will invoke serviceConnection's onServiceConnected method.
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-            Log.i("AudioListActivity", "bindAudioService successfully!");
+            Log.i("SongsActivity", "bindAudioService successfully!");
         }
-        Log.i("AudioListActivity", "bindAudioService ended!");
+        Log.i("SongsActivity", "bindAudioService ended!");
     }
 
     private void unBoundAudioService() {
         if (audioServiceBinder != null) {
             unbindService(serviceConnection);
             audioServiceBinder = null;
-            Log.i("AudioListActivity", "unBoundAudioService successfully!");
+            Log.i("SongsActivity", "unBoundAudioService successfully!");
         }
-        Log.i("AudioListActivity", "unBoundAudioService ended!");
+        Log.i("SongsActivity", "unBoundAudioService ended!");
     }
 
     @Override

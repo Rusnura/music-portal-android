@@ -16,7 +16,6 @@ import org.tumasov.rmusicplayer.services.AudioService;
 import org.tumasov.rmusicplayer.services.AudioServiceBinder;
 
 public class PlayerActivity extends AppCompatActivity {
-    private ServerAPI serverAPI = ServerAPI.getInstance();
     private AudioServiceBinder audioServiceBinder = null;
     private Handler audioProgressUpdateHandler;
     private SeekBar audioPositionBar;
@@ -26,7 +25,6 @@ public class PlayerActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             audioServiceBinder = (AudioServiceBinder) iBinder;
             audioServiceBinder.getPlayer().setAudioProgressUpdateHandler(audioProgressUpdateHandler);
-            Log.i("PlayerActivity", "onServiceConnected successfully!");
         }
 
         @Override
