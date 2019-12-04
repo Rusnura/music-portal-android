@@ -48,6 +48,9 @@ public class SongsActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             audioServiceBinder = (AudioServiceBinder) iBinder;
             audioServiceBinder.getPlayer().setAudioProgressUpdateHandler(audioProgressUpdateHandler);
+            if (audioServiceBinder.getPlayer().getPlaylist() == null) { // Set playlist to MP3Player
+                audioServiceBinder.getPlayer().setPlaylist(songAdapter.getSongs());
+            }
         }
 
         @Override
@@ -65,9 +68,9 @@ public class SongsActivity extends AppCompatActivity {
         selectedPlaylistId = getIntent().getStringExtra("playlistId");
         RecyclerView songsRecyclerView = findViewById(R.id.songs_list);
         songsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        songAdapter = new SongAdapter((song) -> {
+        songAdapter = new SongAdapter((song, index) -> {
             try {
-                audioServiceBinder.getPlayer().play(getApplicationContext(), song);
+                audioServiceBinder.getPlayer().play(getApplicationContext(), index);
                 if (footerRelativeLayout.getVisibility() != View.VISIBLE) {
                     footerRelativeLayout.setVisibility(View.VISIBLE);
                 }

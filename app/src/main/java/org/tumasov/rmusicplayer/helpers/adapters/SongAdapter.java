@@ -63,7 +63,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             songArtist.setText(song.getArtist());
             songTitle.setOnClickListener(l -> {
                 if (onMediaClickListener != null) {
-                    onMediaClickListener.OnMediaClickListener(song);
+                    onMediaClickListener.OnMediaClickListener(song, lastIndex);
                 }
             });
         }

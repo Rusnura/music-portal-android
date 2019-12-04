@@ -6,6 +6,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+
 import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerCompletedListener;
@@ -14,6 +16,8 @@ import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerPrePrepareListener;
 import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerPrepareCompleteListener;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class MP3Player {
@@ -24,8 +28,11 @@ public class MP3Player {
 
     private static MP3Player instance = null;
     private ServerAPI serverAPI = ServerAPI.getInstance(); // FIXME: Player don't must known about serverAPI
+    private List<Song> playlist = null; // FIXME: It's correct???
+    private Context context; // FIXME: Please, fix it, so bad :(
     private MediaPlayer player = new MediaPlayer();
     private Song playingSong;
+    private int playingSongId;
     private Map<String, String> headers = new LinkedHashMap<>();
     private Handler audioProgressUpdateHandler;
     private Thread updateAudioProgressThread = new Thread() {
@@ -68,8 +75,21 @@ public class MP3Player {
         });
 
         player.setOnCompletionListener((player) -> {
+            Log.d("MP3Player", "player.setOnCompletionListener");
             if (onMP3PlayerCompletedListener != null) {
                 onMP3PlayerCompletedListener.onCompleted(this);
+            }
+
+            if ((playingSongId + 1) >= playlist.size()) {
+                playingSongId = 0;
+            } else {
+                playingSongId++;
+            }
+
+            try {
+                play(context, playingSongId);
+            } catch (IOException e) {
+                Log.e("MP3Player", "player.setOnCompletionListener::play(Context, int) exception", e);
             }
         });
     }
@@ -81,7 +101,12 @@ public class MP3Player {
         return instance;
     }
 
-    public void play(Context context, Song song) throws IOException {
+    public void play(Context context, int songId) throws IOException {
+        Song song = playlist.get(songId);
+        if (this.context == null) {
+            this.context = context;
+        }
+
         if (onMP3PlayerPrePrepareListener != null) {
             onMP3PlayerPrePrepareListener.onPrePrepare(this);
         }
@@ -92,6 +117,7 @@ public class MP3Player {
         player.reset();
         player.setDataSource(context, Uri.parse(serverAPI.getMP3FileLink(song)), headers);
         this.playingSong = song;
+        this.playingSongId = songId;
         player.prepareAsync();
     }
 
@@ -121,6 +147,14 @@ public class MP3Player {
 
     public Song getPlayingSong() {
         return playingSong;
+    }
+
+    public List<Song> getPlaylist() {
+        return playlist;
+    }
+
+    public void setPlaylist(List<Song> playlist) {
+        this.playlist = playlist;
     }
 
     public void setOnMP3PlayerPrepareCompleteListener(MP3PlayerPrepareCompleteListener onMP3PlayerPrepareCompleteListener) {
