@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayerActivity">
+    tools:context=".ui.PlayerActivity">
     <ImageView android:id="@+id/player_main_image" android:layout_width="match_parent" android:layout_height="match_parent" />
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/belowBar" android:orientation="vertical"
                   android:layout_alignParentBottom="true">

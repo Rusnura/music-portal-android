@@ -19,7 +19,6 @@ import android.widget.SeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.tumasov.rmusicplayer.PlayerActivity;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
@@ -82,10 +81,6 @@ public class SongsActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         songsRecyclerView.setLayoutManager(linearLayoutManager);
         songsRecyclerView.setAdapter(songAdapter);
-
-        openPlayerButton.setOnClickListener((l) -> {
-            startActivity(new Intent(this, PlayerActivity.class));
-        });
 
         if (selectedPlaylistId != null) {
             if (selectedPlaylistId.equals("all")) {

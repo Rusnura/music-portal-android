@@ -12,7 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PlayerActivity"></activity>
         <activity android:name=".ui.SongsActivity" />
         <activity android:name=".ui.PlaylistsActivity" />
         <activity android:name=".ui.SignUpActivity" />

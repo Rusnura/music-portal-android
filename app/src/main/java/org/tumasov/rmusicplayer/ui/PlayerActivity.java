@@ -1,4 +1,4 @@
-package org.tumasov.rmusicplayer;
+package org.tumasov.rmusicplayer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.ComponentName;
@@ -8,13 +8,14 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.SeekBar;
-import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
+
+import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.helpers.player.PlayerMessages;
 import org.tumasov.rmusicplayer.services.AudioService;
 import org.tumasov.rmusicplayer.services.AudioServiceBinder;
 
+@Deprecated
 public class PlayerActivity extends AppCompatActivity {
     private AudioServiceBinder audioServiceBinder = null;
     private Handler audioProgressUpdateHandler;

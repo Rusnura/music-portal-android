@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.entities.Song;
-import org.tumasov.rmusicplayer.events.OnMediaClickListener;
+import org.tumasov.rmusicplayer.helpers.interfaces.OnMediaClickListener;
 import java.util.ArrayList;
 import java.util.List;
 

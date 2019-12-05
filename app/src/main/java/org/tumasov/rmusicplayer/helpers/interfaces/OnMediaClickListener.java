@@ -1,4 +1,4 @@
-package org.tumasov.rmusicplayer.events;
+package org.tumasov.rmusicplayer.helpers.interfaces;
 
 import org.tumasov.rmusicplayer.entities.Song;
 
