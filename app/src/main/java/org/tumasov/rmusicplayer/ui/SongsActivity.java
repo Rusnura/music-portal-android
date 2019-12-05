@@ -1,6 +1,6 @@
 package org.tumasov.rmusicplayer.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +13,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,11 +30,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SongsActivity extends AppCompatActivity {
+public class SongsActivity extends FragmentActivity {
     private ServerAPI serverAPI = ServerAPI.getInstance();
-    private RelativeLayout footerRelativeLayout;
+    private View footerRelativeLayout;
     private SeekBar audioPositionBar;
-    private Button openPlayerButton;
     private String selectedPlaylistId;
     private SongAdapter songAdapter;
     private AudioServiceBinder audioServiceBinder = null;
@@ -63,7 +60,6 @@ public class SongsActivity extends AppCompatActivity {
 
         footerRelativeLayout = findViewById(R.id.audio_list_footer);
         audioPositionBar = findViewById(R.id.audioPosition);
-        openPlayerButton = findViewById(R.id.audio_list_open_player_button);
         selectedPlaylistId = getIntent().getStringExtra("playlistId");
         RecyclerView songsRecyclerView = findViewById(R.id.songs_list);
         songsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -114,14 +110,10 @@ public class SongsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 
