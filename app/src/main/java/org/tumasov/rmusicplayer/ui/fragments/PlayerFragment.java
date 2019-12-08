@@ -15,7 +15,9 @@ import android.widget.SeekBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import org.tumasov.rmusicplayer.R;
+import org.tumasov.rmusicplayer.helpers.player.MP3Player;
 import org.tumasov.rmusicplayer.helpers.player.PlayerMessages;
 import org.tumasov.rmusicplayer.services.AudioService;
 import org.tumasov.rmusicplayer.services.AudioServiceBinder;
@@ -30,9 +32,13 @@ public class PlayerFragment extends Fragment {
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            FragmentActivity activity = getActivity();
             audioServiceBinder = (AudioServiceBinder) iBinder;
-            audioServiceBinder.getPlayer().setAudioProgressUpdateHandler(audioProgressUpdateHandler);
-            audioServiceBinder.getPlayer().setPlaylist(((SongsActivity)getActivity()).getSongAdapter().getSongs());
+            MP3Player player = audioServiceBinder.getPlayer();
+            player.setAudioProgressUpdateHandler(audioProgressUpdateHandler);
+            if (player.getPlaylist() == null && activity instanceof SongsActivity) {
+                player.setPlaylist(((SongsActivity) activity).getSongAdapter().getSongs());
+            }
         }
 
         @Override
@@ -82,12 +88,20 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        bindAudioService();
+        if (bindAudioService()) {
+            Log.d("PlayerFragment", "onResume::BindAudioService successfully!");
+        } else {
+            Log.e("PlayerFragment", "onResume::BindAudioService NOT successfully!");
+        }
     }
 
     @Override
     public void onPause() {
-        unBoundAudioService();
+        if (unBoundAudioService()) {
+            Log.d("PlayerFragment", "onPause::UNBoundAudioService successfully!");
+        } else {
+            Log.e("PlayerFragment", "onPause::UNBoundAudioService NOT successfully!");
+        }
         super.onPause();
     }
 
@@ -97,22 +111,24 @@ public class PlayerFragment extends Fragment {
         super.onDestroy();
     }
 
-    private void bindAudioService() {
-        if (audioServiceBinder == null) {
+    private boolean bindAudioService() {
+        FragmentActivity activity = getActivity();
+        if (audioServiceBinder == null && activity != null) {
             Intent intent = new Intent(getActivity(), AudioService.class);
-            getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-            Log.i("SongsActivity", "bindAudioService successfully!");
+            activity.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+            return true;
         }
-        Log.i("SongsActivity", "bindAudioService ended!");
+        return false;
     }
 
-    private void unBoundAudioService() {
-        if (audioServiceBinder != null) {
+    private boolean unBoundAudioService() {
+        FragmentActivity activity = getActivity();
+        if (audioServiceBinder != null && activity != null) {
             getActivity().unbindService(serviceConnection);
             audioServiceBinder = null;
-            Log.i("SongsActivity", "unBoundAudioService successfully!");
+            return true;
         }
-        Log.i("SongsActivity", "unBoundAudioService ended!");
+        return false;
     }
 
     public boolean play(int index) {
