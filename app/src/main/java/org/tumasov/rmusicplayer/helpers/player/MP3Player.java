@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
 import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerCompletedListener;
@@ -16,7 +15,6 @@ import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerPrePrepareListener;
 import org.tumasov.rmusicplayer.helpers.interfaces.MP3PlayerPrepareCompleteListener;
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -157,12 +155,20 @@ public class MP3Player {
         this.playlist = playlist;
     }
 
-    public void setOnMP3PlayerPrepareCompleteListener(MP3PlayerPrepareCompleteListener onMP3PlayerPrepareCompleteListener) {
-        this.onMP3PlayerPrepareCompleteListener = onMP3PlayerPrepareCompleteListener;
+    public void setOnMP3PlayerErrorListener(MP3PlayerErrorListener onMP3PlayerErrorListener) {
+        this.onMP3PlayerErrorListener = onMP3PlayerErrorListener;
     }
 
-    public Handler getAudioProgressUpdateHandler() {
-        return audioProgressUpdateHandler;
+    public void setOnMP3PlayerCompletedListener(MP3PlayerCompletedListener onMP3PlayerCompletedListener) {
+        this.onMP3PlayerCompletedListener = onMP3PlayerCompletedListener;
+    }
+
+    public void setOnMP3PlayerPrePrepareListener(MP3PlayerPrePrepareListener onMP3PlayerPrePrepareListener) {
+        this.onMP3PlayerPrePrepareListener = onMP3PlayerPrePrepareListener;
+    }
+
+    public void setOnMP3PlayerPrepareCompleteListener(MP3PlayerPrepareCompleteListener onMP3PlayerPrepareCompleteListener) {
+        this.onMP3PlayerPrepareCompleteListener = onMP3PlayerPrepareCompleteListener;
     }
 
     public void setAudioProgressUpdateHandler(Handler audioProgressUpdateHandler) {

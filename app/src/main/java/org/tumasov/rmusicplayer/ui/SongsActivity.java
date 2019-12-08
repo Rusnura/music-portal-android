@@ -38,7 +38,7 @@ public class SongsActivity extends FragmentActivity {
         RecyclerView songsRecyclerView = findViewById(R.id.songs_list);
         songsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         songAdapter = new SongAdapter((song, index) -> {
-            if (!playerFragment.play(index)) {
+            if (!playerFragment.play(song, index)) {
                 Log.e("SongsActivity", "songAdapter::onItemSelect(): Can't play music! Index: " + index);
             }
         });

@@ -12,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import org.tumasov.rmusicplayer.R;
+import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.player.MP3Player;
 import org.tumasov.rmusicplayer.helpers.player.PlayerMessages;
 import org.tumasov.rmusicplayer.services.AudioService;
@@ -28,6 +30,7 @@ public class PlayerFragment extends Fragment {
     private AudioServiceBinder audioServiceBinder = null;
     private Handler audioProgressUpdateHandler;
     private SeekBar audioPositionBar;
+    private TextView songInformation;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -68,6 +71,7 @@ public class PlayerFragment extends Fragment {
             return false;
         });
 
+        songInformation = view.findViewById(R.id.player_song_information);
         audioPositionBar = view.findViewById(R.id.audioPosition);
         audioPositionBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -131,10 +135,11 @@ public class PlayerFragment extends Fragment {
         return false;
     }
 
-    public boolean play(int index) {
+    public boolean play(Song song, int index) {
         if (audioServiceBinder != null) {
             try {
                 audioServiceBinder.getPlayer().play(getContext(), index);
+                songInformation.setText(String.format("%s - %s", song.getArtist(), song.getTitle()));
                 return true;
             } catch (IOException e) {
                 return false;
