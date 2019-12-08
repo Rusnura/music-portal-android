@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.PlaylistsActivity">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playlist"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</ScrollView>
+        android:layout_height="match_parent"
+        android:layout_above="@id/play_list_footer">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/playlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+    <fragment
+        android:id="@+id/play_list_footer"
+        android:name="org.tumasov.rmusicplayer.ui.fragments.PlayerFragment"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        tools:layout="@layout/fragment_player">
+    </fragment>
+</RelativeLayout>
