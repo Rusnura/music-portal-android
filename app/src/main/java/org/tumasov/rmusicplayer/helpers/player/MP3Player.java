@@ -77,19 +77,34 @@ public class MP3Player {
             if (onMP3PlayerCompletedListener != null) {
                 onMP3PlayerCompletedListener.onCompleted(this);
             }
-
-            if ((playingSongId + 1) >= playlist.size()) {
-                playingSongId = 0;
-            } else {
-                playingSongId++;
-            }
-
-            try {
-                play(context, playingSongId);
-            } catch (IOException e) {
-                Log.e("MP3Player", "player.setOnCompletionListener::play(Context, int) exception", e);
-            }
+            next();
         });
+    }
+
+    private void play0(Context context, int playingSongId) {
+        try {
+            play(context, playingSongId);
+        } catch (IOException e) {
+            Log.e("MP3Player", "player.setOnCompletionListener::play(Context, int) exception", e);
+        }
+    }
+
+    public void next() {
+        if ((playingSongId + 1) >= playlist.size()) {
+            playingSongId = 0;
+        } else {
+            playingSongId++;
+        }
+        play0(context, playingSongId);
+    }
+
+    private void previous() {
+        if ((playingSongId - 1) <= 0) {
+            playingSongId = playlist.size() - 1;
+        } else {
+            playingSongId--;
+        }
+        play0(context, playingSongId);
     }
 
     public static synchronized MP3Player getInstance() {
