@@ -25,7 +25,7 @@ public class PlayerActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             audioServiceBinder = (AudioServiceBinder) iBinder;
-            audioServiceBinder.getPlayer().setAudioProgressUpdateHandler(audioProgressUpdateHandler);
+            audioServiceBinder.getPlayer().setAudioMessageHandler(audioProgressUpdateHandler);
         }
 
         @Override

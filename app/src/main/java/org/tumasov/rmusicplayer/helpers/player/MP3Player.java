@@ -31,18 +31,25 @@ public class MP3Player {
     private MediaPlayer player = new MediaPlayer();
     private Song playingSong;
     private int playingSongId;
+    private String playerStatus;
     private Map<String, String> headers = new LinkedHashMap<>();
-    private Handler audioProgressUpdateHandler;
+    private Handler audioMessageHandler;
     private Thread updateAudioProgressThread = new Thread() {
         @Override
         public void run() {
             while (true) {
                 if (isPlaying()) {
-                    Message updateAudioProgressMsg = new Message();
-                    updateAudioProgressMsg.what = PlayerMessages.UPDATE_AUDIO_PROGRESS_BAR;
-                    if (audioProgressUpdateHandler != null) {
-                        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+                    Message updateAudioProgressMessage = new Message();
+                    updateAudioProgressMessage.what = PlayerMessages.UPDATE_AUDIO_PROGRESS_BAR;
+                    if (audioMessageHandler != null) {
+                        audioMessageHandler.sendMessage(updateAudioProgressMessage);
                     }
+                }
+
+                Message statusAudioMessage = new Message();
+                statusAudioMessage.what = PlayerMessages.UPDATE_AUDIO_MESSAGE;
+                if (audioMessageHandler != null) {
+                    audioMessageHandler.sendMessage(statusAudioMessage);
                 }
 
                 try {
@@ -62,10 +69,12 @@ public class MP3Player {
             if (onMP3PlayerPrepareCompleteListener != null) {
                 onMP3PlayerPrepareCompleteListener.onPrepareCompleted(this);
             }
+            playerStatus = playingSong.getArtist() + " - " + playingSong.getTitle();
             player.start();
         });
 
         player.setOnErrorListener((player, what, extra) -> {
+            playerStatus = "Ошибка :(";
             if (onMP3PlayerErrorListener != null) {
                 return onMP3PlayerErrorListener.onError(this, what, extra);
             }
@@ -98,13 +107,21 @@ public class MP3Player {
         play0(context, playingSongId);
     }
 
-    private void previous() {
+    public void previous() {
         if ((playingSongId - 1) <= 0) {
             playingSongId = playlist.size() - 1;
         } else {
             playingSongId--;
         }
         play0(context, playingSongId);
+    }
+
+    public void pauseOrResume() {
+        if (player.isPlaying()) {
+            player.pause();
+        } else {
+            player.start();
+        }
     }
 
     public static synchronized MP3Player getInstance() {
@@ -115,6 +132,7 @@ public class MP3Player {
     }
 
     public void play(Context context, int songId) throws IOException {
+        playerStatus = "Подготовка...";
         Song song = playlist.get(songId);
         if (this.context == null) {
             this.context = context;
@@ -170,6 +188,10 @@ public class MP3Player {
         this.playlist = playlist;
     }
 
+    public String getStatus() {
+        return playerStatus;
+    }
+
     public void setOnMP3PlayerErrorListener(MP3PlayerErrorListener onMP3PlayerErrorListener) {
         this.onMP3PlayerErrorListener = onMP3PlayerErrorListener;
     }
@@ -186,7 +208,7 @@ public class MP3Player {
         this.onMP3PlayerPrepareCompleteListener = onMP3PlayerPrepareCompleteListener;
     }
 
-    public void setAudioProgressUpdateHandler(Handler audioProgressUpdateHandler) {
-        this.audioProgressUpdateHandler = audioProgressUpdateHandler;
+    public void setAudioMessageHandler(Handler audioMessageHandler) {
+        this.audioMessageHandler = audioMessageHandler;
     }
 }

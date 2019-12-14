@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -38,7 +39,7 @@ public class PlayerFragment extends Fragment {
             FragmentActivity activity = getActivity();
             audioServiceBinder = (AudioServiceBinder) iBinder;
             MP3Player player = audioServiceBinder.getPlayer();
-            player.setAudioProgressUpdateHandler(audioProgressUpdateHandler);
+            player.setAudioMessageHandler(audioProgressUpdateHandler);
             if (player.getPlaylist() == null && activity instanceof SongsActivity) {
                 player.setPlaylist(((SongsActivity) activity).getSongAdapter().getSongs());
             }
@@ -65,12 +66,31 @@ public class PlayerFragment extends Fragment {
                         audioPositionBar.setMax(totalProgress);
                     }
                     audioPositionBar.setProgress(currentProgress);
+                } else if (message.what == PlayerMessages.UPDATE_AUDIO_MESSAGE) {
+                    songInformation.setText(audioServiceBinder.getPlayer().getStatus());
                 }
                 return true;
             }
             return false;
         });
-
+        Button previousSongButton = view.findViewById(R.id.fragment_previous_song_button);
+        previousSongButton.setOnClickListener((l) -> {
+            if (audioServiceBinder != null) {
+                audioServiceBinder.getPlayer().previous();
+            }
+        });
+        Button nextSongButton = view.findViewById(R.id.fragment_next_song_button);
+        nextSongButton.setOnClickListener((l) -> {
+            if (audioServiceBinder != null) {
+                audioServiceBinder.getPlayer().next();
+            }
+        });
+        Button playPauseButton = view.findViewById(R.id.fragment_play_pause_button);
+        playPauseButton.setOnClickListener((l) -> {
+            if (audioServiceBinder != null) {
+                audioServiceBinder.getPlayer().pauseOrResume();
+            }
+        });
         songInformation = view.findViewById(R.id.player_song_information);
         audioPositionBar = view.findViewById(R.id.audioPosition);
         audioPositionBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -139,7 +159,6 @@ public class PlayerFragment extends Fragment {
         if (audioServiceBinder != null) {
             try {
                 audioServiceBinder.getPlayer().play(getContext(), index);
-                songInformation.setText(String.format("%s - %s", song.getArtist(), song.getTitle()));
                 return true;
             } catch (IOException e) {
                 return false;
