@@ -1,4 +1,4 @@
-package org.tumasov.rmusicplayer.helpers.adapters;
+package org.tumasov.rmusicplayer.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;

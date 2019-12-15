@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
-import org.tumasov.rmusicplayer.helpers.adapters.SongAdapter;
+import org.tumasov.rmusicplayer.ui.adapters.SongAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
 import org.tumasov.rmusicplayer.ui.fragments.PlayerFragment;

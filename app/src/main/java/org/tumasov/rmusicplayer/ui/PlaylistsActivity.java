@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.entities.Playlist;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
-import org.tumasov.rmusicplayer.helpers.adapters.PlaylistAdapter;
+import org.tumasov.rmusicplayer.ui.adapters.PlaylistAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 
 import java.util.LinkedList;
