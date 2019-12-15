@@ -99,28 +99,34 @@ public class MP3Player {
     }
 
     public void next() {
-        if ((playingSongId + 1) >= playlist.size()) {
-            playingSongId = 0;
-        } else {
-            playingSongId++;
+        if (context != null && playlist != null && playlist.size() > 0) {
+            if ((playingSongId + 1) >= playlist.size()) {
+                playingSongId = 0;
+            } else {
+                playingSongId++;
+            }
+            play0(context, playingSongId);
         }
-        play0(context, playingSongId);
     }
 
     public void previous() {
-        if ((playingSongId - 1) <= 0) {
-            playingSongId = playlist.size() - 1;
-        } else {
-            playingSongId--;
+        if (context != null && playlist != null && playlist.size() > 0) {
+            if ((playingSongId - 1) <= 0) {
+                playingSongId = playlist.size() - 1;
+            } else {
+                playingSongId--;
+            }
+            play0(context, playingSongId);
         }
-        play0(context, playingSongId);
     }
 
     public void pauseOrResume() {
-        if (player.isPlaying()) {
-            player.pause();
-        } else {
-            player.start();
+        if (context != null) {
+            if (player.isPlaying()) {
+                player.pause();
+            } else {
+                player.start();
+            }
         }
     }
 
