@@ -16,6 +16,8 @@ public class ServerAPI {
     private static ServerAPI instance;
     private static Token token;
     private static String SERVER_URL;
+    private static String SERVER_LOGIN;
+    private static String SERVER_PASSWORD;
     private static final String CONTENT_TYPE = "application/json";
 
     private ServerAPI() {}
@@ -56,6 +58,8 @@ public class ServerAPI {
                 try {
                     token = JSONUtils.getObjectFromJSON(r.getBody(), Token.class);
                     SERVER_URL = serverUrl;
+                    SERVER_LOGIN = username;
+                    SERVER_PASSWORD = password;
                     Log.d("SERVER_API", "login(): JSON Token received: " + token.getToken());
                 } catch (JSONException e) {
                     Log.e("SERVER_API", "login(): Request is successful, but cannot parse token! Error: " + e.getMessage(), e);
@@ -66,12 +70,16 @@ public class ServerAPI {
         new AsyncHttpExecutor(request, authListener).execute();
     }
 
+    void reAuth(AsyncHttpExecutorListener listener) {
+        login(SERVER_URL, SERVER_LOGIN, SERVER_PASSWORD, listener);
+    }
+
     public void getMyPlaylists(@NonNull AsyncHttpExecutorListener listener) {
         HttpRequest request = new HttpRequest.HttpBuilder(SERVER_URL + "api/playlists", "GET")
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
-        new AsyncHttpExecutor(request, listener).execute();
+        new AsyncHttpExecutor(request, new RequestPostProcessor(request, listener)).execute();
     }
 
     public void getPlaylists(@NonNull String username, @NonNull AsyncHttpExecutorListener listener) {
@@ -79,7 +87,7 @@ public class ServerAPI {
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
-        new AsyncHttpExecutor(request, listener).execute();
+        new AsyncHttpExecutor(request, new RequestPostProcessor(request, listener)).execute();
     }
 
     public void getMySongs(@NonNull AsyncHttpExecutorListener listener) {
@@ -87,7 +95,7 @@ public class ServerAPI {
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
-        new AsyncHttpExecutor(request, listener).execute();
+        new AsyncHttpExecutor(request, new RequestPostProcessor(request, listener)).execute();
     }
 
     public void getSongsFromPlaylist(@NonNull String playlistId, @NonNull AsyncHttpExecutorListener listener) {
@@ -95,7 +103,7 @@ public class ServerAPI {
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
-        new AsyncHttpExecutor(request, listener).execute();
+        new AsyncHttpExecutor(request, new RequestPostProcessor(request, listener)).execute();
     }
 
     public void getMP3File(@NonNull String playlistId, @NonNull String id, @NonNull AsyncHttpExecutorListener listener) {
@@ -103,7 +111,7 @@ public class ServerAPI {
                 .addHeader(new HttpParameter("Content-Type", CONTENT_TYPE))
                 .addHeader(new HttpParameter("Authorization", "Bearer " + token.getToken()))
                 .build();
-        new AsyncHttpExecutor(request, listener).execute();
+        new AsyncHttpExecutor(request, new RequestPostProcessor(request, listener)).execute();
     }
 
     public String getMP3FileLink(@NonNull Song song) {

@@ -62,7 +62,6 @@ public class MP3Player {
     };
 
     private MP3Player() {
-        headers.put("Authorization", "Bearer " + serverAPI.getToken().getToken());
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         updateAudioProgressThread.start();
         player.setOnPreparedListener((player) -> {
@@ -138,6 +137,7 @@ public class MP3Player {
     }
 
     public void play(Context context, int songId) throws IOException {
+        headers.put("Authorization", "Bearer " + serverAPI.getToken().getToken());
         playerStatus = "Подготовка...";
         Song song = playlist.get(songId);
         if (this.context == null) {

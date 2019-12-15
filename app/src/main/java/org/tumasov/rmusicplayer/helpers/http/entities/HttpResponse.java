@@ -23,6 +23,10 @@ public class HttpResponse {
         return code < HttpURLConnection.HTTP_BAD_REQUEST;
     }
 
+    public boolean isAuthorized() {
+        return code != HttpURLConnection.HTTP_UNAUTHORIZED;
+    }
+
     @Override
     public String toString() {
         return "HttpResponse{" +
