@@ -13,18 +13,17 @@ import android.widget.SeekBar;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.helpers.player.PlayerMessages;
 import org.tumasov.rmusicplayer.services.AudioService;
-import org.tumasov.rmusicplayer.services.AudioServiceBinder;
 
 @Deprecated
 public class PlayerActivity extends AppCompatActivity {
-    private AudioServiceBinder audioServiceBinder = null;
+    private AudioService.AudioServiceBinder audioServiceBinder = null;
     private Handler audioProgressUpdateHandler;
     private SeekBar audioPositionBar;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            audioServiceBinder = (AudioServiceBinder) iBinder;
+            audioServiceBinder = (AudioService.AudioServiceBinder) iBinder;
             audioServiceBinder.getPlayer().setAudioMessageHandler(audioProgressUpdateHandler);
         }
 

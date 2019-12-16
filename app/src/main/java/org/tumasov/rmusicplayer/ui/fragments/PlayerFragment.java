@@ -23,12 +23,11 @@ import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.player.MP3Player;
 import org.tumasov.rmusicplayer.helpers.player.PlayerMessages;
 import org.tumasov.rmusicplayer.services.AudioService;
-import org.tumasov.rmusicplayer.services.AudioServiceBinder;
 import org.tumasov.rmusicplayer.ui.SongsActivity;
 import java.io.IOException;
 
 public class PlayerFragment extends Fragment {
-    private AudioServiceBinder audioServiceBinder = null;
+    private AudioService.AudioServiceBinder audioServiceBinder = null;
     private Handler audioProgressUpdateHandler;
     private SeekBar audioPositionBar;
     private TextView songInformation;
@@ -37,7 +36,7 @@ public class PlayerFragment extends Fragment {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             FragmentActivity activity = getActivity();
-            audioServiceBinder = (AudioServiceBinder) iBinder;
+            audioServiceBinder = (AudioService.AudioServiceBinder) iBinder;
             MP3Player player = audioServiceBinder.getPlayer();
             player.setAudioMessageHandler(audioProgressUpdateHandler);
             if (player.getPlaylist() == null && activity instanceof SongsActivity) {
