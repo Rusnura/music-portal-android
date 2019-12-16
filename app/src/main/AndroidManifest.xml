@@ -3,6 +3,9 @@
     package="org.tumasov.rmusicplayer">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE "/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE "/>
 
     <application
         android:allowBackup="true"
@@ -16,10 +19,7 @@
         <activity android:name=".ui.PlaylistsActivity" />
         <activity android:name=".ui.SignUpActivity" />
 
-        <service
-            android:name=".services.AudioService"
-            android:enabled="true"
-            android:exported="true" />
+        <service android:name=".services.AudioService" android:enabled="true" android:exported="true" />
 
         <activity android:name=".ui.LoginActivity">
             <intent-filter>
