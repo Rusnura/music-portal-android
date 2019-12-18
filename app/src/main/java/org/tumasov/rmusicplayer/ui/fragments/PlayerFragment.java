@@ -137,8 +137,8 @@ public class PlayerFragment extends Fragment {
     private boolean bindAudioService() {
         FragmentActivity activity = getActivity();
         if (audioServiceBinder == null && activity != null) {
-            Intent intent = new Intent(getActivity(), AudioService.class);
-            activity.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+            activity.startService(new Intent(activity.getApplicationContext(), AudioService.class));
+            activity.bindService(new Intent(activity, AudioService.class), serviceConnection, 0);
             return true;
         }
         return false;

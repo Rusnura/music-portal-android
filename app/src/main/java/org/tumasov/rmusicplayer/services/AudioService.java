@@ -24,7 +24,7 @@ public class AudioService extends Service {
     private final MP3Player player = MP3Player.getInstance();
     private final IBinder audioServiceBinder = new AudioServiceBinder();
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+//    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate() {
         super.onCreate();
@@ -39,7 +39,7 @@ public class AudioService extends Service {
                     .setSmallIcon(R.drawable.play)
                     .setTicker(p.getPlayingSong().getTitle())
                     .setOngoing(true)
-                    .setChannelId(NOTIFICATION_ID)
+//                    .setChannelId(NOTIFICATION_ID)
                     .setContentTitle(p.getPlayingSong().getArtist() + " - " + p.getPlayingSong().getTitle())
                     .setContentText(p.getPlayingSong().getTitle());
             Notification notification = builder.build();
