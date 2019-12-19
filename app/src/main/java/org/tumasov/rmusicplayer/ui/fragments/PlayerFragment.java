@@ -1,7 +1,6 @@
 package org.tumasov.rmusicplayer.ui.fragments;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -88,6 +87,11 @@ public class PlayerFragment extends Fragment {
         playPauseButton.setOnClickListener((l) -> {
             if (audioServiceBinder != null) {
                 audioServiceBinder.getPlayer().pauseOrResume();
+                if (!audioServiceBinder.getPlayer().isPlaying()) {
+                    audioServiceBinder.getService().stopForegroundNotification();
+                } else {
+                    audioServiceBinder.getService().startForegroundNotification();
+                }
             }
         });
         songInformation = view.findViewById(R.id.player_song_information);

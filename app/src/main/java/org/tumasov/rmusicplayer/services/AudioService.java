@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.helpers.player.MP3Player;
 import org.tumasov.rmusicplayer.ui.SongsActivity;
@@ -36,7 +35,6 @@ public class AudioService extends Service {
             builder.setContentIntent(pendInt)
                 .setSmallIcon(R.drawable.play)
                 .setTicker(p.getPlayingSong().getTitle())
-                .setOngoing(true)
                 .setContentTitle(p.getPlayingSong().getArtist() + " - " + p.getPlayingSong().getTitle())
                 .setContentText(p.getPlayingSong().getTitle());
 
@@ -44,7 +42,7 @@ public class AudioService extends Service {
                 builder.setChannelId(NOTIFICATION_ID);
             }
             notification = builder.build();
-            startForeground(Integer.parseInt(NOTIFICATION_ID), notification);
+            startForegroundNotification();
         });
     }
 
@@ -57,19 +55,21 @@ public class AudioService extends Service {
         }
     }
 
+    public void startForegroundNotification() {
+        startForeground(Integer.parseInt(NOTIFICATION_ID), notification);
+    }
+
+    public void stopForegroundNotification() {
+        stopForeground(true);
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return audioServiceBinder;
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d("AudioService", "AudioService::onDestroy()");
-        //stopForeground(true);
-    }
-
     public class AudioServiceBinder extends Binder {
-        AudioService getService() {
+        public AudioService getService() {
             return AudioService.this;
         }
 
