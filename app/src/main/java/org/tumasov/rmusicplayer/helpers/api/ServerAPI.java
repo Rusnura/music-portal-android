@@ -23,10 +23,7 @@ public class ServerAPI {
     private ServerAPI() {}
 
     public static synchronized ServerAPI getInstance() {
-        if (instance == null) {
-            instance = new ServerAPI();
-        }
-        return instance;
+        return instance != null ? instance : (instance = new ServerAPI());
     }
 
     public void register(@NonNull String serverUrl, @NonNull User user, @NonNull AsyncHttpExecutorListener listener) {

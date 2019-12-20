@@ -25,10 +25,11 @@ public class MP3Player {
     private MP3PlayerCompletedListener onMP3PlayerCompletedListener;
 
     private static MP3Player instance = null;
+    private MediaPlayer player = new MediaPlayer();
+    private Context context; // FIXME: Please, fix it, so bad :(
     private ServerAPI serverAPI = ServerAPI.getInstance(); // FIXME: Player don't must known about serverAPI
     private List<Song> playlist = null; // FIXME: It's correct???
-    private Context context; // FIXME: Please, fix it, so bad :(
-    private MediaPlayer player = new MediaPlayer();
+    private String playlistId;
     private Song playingSong;
     private int playingSongId;
     private String playerStatus;
@@ -89,6 +90,10 @@ public class MP3Player {
         });
     }
 
+    public static synchronized MP3Player getInstance() {
+        return (instance != null) ? instance : (instance = new MP3Player());
+    }
+
     private void play0(Context context, int playingSongId) {
         try {
             play(context, playingSongId);
@@ -110,7 +115,7 @@ public class MP3Player {
 
     public void previous() {
         if (context != null && playlist != null && playlist.size() > 0) {
-            if ((playingSongId - 1) <= 0) {
+            if ((playingSongId - 1) < 0) {
                 playingSongId = playlist.size() - 1;
             } else {
                 playingSongId--;
@@ -127,13 +132,6 @@ public class MP3Player {
                 player.start();
             }
         }
-    }
-
-    public static synchronized MP3Player getInstance() {
-        if (instance == null) {
-            instance = new MP3Player();
-        }
-        return instance;
     }
 
     public void play(Context context, int songId) throws IOException {
@@ -216,5 +214,13 @@ public class MP3Player {
 
     public void setAudioMessageHandler(Handler audioMessageHandler) {
         this.audioMessageHandler = audioMessageHandler;
+    }
+
+    public void setPlaylistId(String playlistId) {
+        this.playlistId = playlistId;
+    }
+
+    public String getPlaylistId() {
+        return playlistId;
     }
 }

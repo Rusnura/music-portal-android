@@ -34,13 +34,8 @@ public class PlayerFragment extends Fragment {
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            FragmentActivity activity = getActivity();
             audioServiceBinder = (AudioService.AudioServiceBinder) iBinder;
-            MP3Player player = audioServiceBinder.getPlayer();
-            player.setAudioMessageHandler(audioProgressUpdateHandler);
-            if (player.getPlaylist() == null && activity instanceof SongsActivity) {
-                player.setPlaylist(((SongsActivity) activity).getSongAdapter().getSongs());
-            }
+            audioServiceBinder.getPlayer().setAudioMessageHandler(audioProgressUpdateHandler);
         }
 
         @Override
@@ -168,5 +163,9 @@ public class PlayerFragment extends Fragment {
             }
         }
         return false;
+    }
+
+    public MP3Player getPlayer() {
+        return (audioServiceBinder != null) ? audioServiceBinder.getPlayer() : null;
     }
 }

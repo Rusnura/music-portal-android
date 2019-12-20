@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.tumasov.rmusicplayer.R;
 import org.tumasov.rmusicplayer.entities.Song;
 import org.tumasov.rmusicplayer.helpers.JSONUtils;
+import org.tumasov.rmusicplayer.helpers.player.MP3Player;
 import org.tumasov.rmusicplayer.ui.adapters.SongAdapter;
 import org.tumasov.rmusicplayer.helpers.api.ServerAPI;
 import org.tumasov.rmusicplayer.helpers.http.entities.HttpResponse;
@@ -38,6 +39,12 @@ public class SongsActivity extends FragmentActivity {
         RecyclerView songsRecyclerView = findViewById(R.id.songs_list);
         songsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         songAdapter = new SongAdapter((song, index) -> {
+            MP3Player player = playerFragment.getPlayer();
+            if (player.getPlaylistId() == null || !player.getPlaylistId().equals(selectedPlaylistId)) {
+                player.setPlaylistId(selectedPlaylistId);
+                player.setPlaylist(songAdapter.getSongs());
+            }
+
             if (!playerFragment.play(song, index)) {
                 Log.e("SongsActivity", "songAdapter::onItemSelect(): Can't play music! Index: " + index);
             }
@@ -78,9 +85,5 @@ public class SongsActivity extends FragmentActivity {
             songAdapter.getSongs().addAll(song);
             songAdapter.notifyDataSetChanged();
         });
-    }
-
-    public SongAdapter getSongAdapter() {
-        return this.songAdapter;
     }
 }
