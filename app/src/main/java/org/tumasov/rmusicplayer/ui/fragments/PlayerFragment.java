@@ -100,10 +100,14 @@ public class PlayerFragment extends Fragment {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                prepareForSeeking(true);
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                prepareForSeeking(false);
+            }
         });
     }
 
@@ -167,5 +171,22 @@ public class PlayerFragment extends Fragment {
 
     public MP3Player getPlayer() {
         return (audioServiceBinder != null) ? audioServiceBinder.getPlayer() : null;
+    }
+
+
+    private void prepareForSeeking(boolean mustPlaying) {
+        if (audioServiceBinder != null) {
+            MP3Player player = audioServiceBinder.getPlayer();
+            if (player.isPlaying() == mustPlaying) {
+                player.pauseOrResume();
+            }
+        }
+    }
+
+    private void playOrPause() {
+        if (audioServiceBinder != null) {
+            MP3Player player = audioServiceBinder.getPlayer();
+            player.pauseOrResume();
+        }
     }
 }
