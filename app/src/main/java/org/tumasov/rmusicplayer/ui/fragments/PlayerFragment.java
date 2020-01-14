@@ -182,11 +182,4 @@ public class PlayerFragment extends Fragment {
             }
         }
     }
-
-    private void playOrPause() {
-        if (audioServiceBinder != null) {
-            MP3Player player = audioServiceBinder.getPlayer();
-            player.pauseOrResume();
-        }
-    }
 }
